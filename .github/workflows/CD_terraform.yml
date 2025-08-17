@@ -10,7 +10,7 @@ on:
         type: choice
         options:
 
-job:
+jobs:
   CD_terraform:
     runs-on: [self-hosted, Linux, X64]
     timeout-munetes: 60

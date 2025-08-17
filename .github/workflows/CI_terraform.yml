@@ -9,7 +9,7 @@ on:
       - main
       - 'feature/*'
 
-job:
+jobs:
   CI_terraform:
     runs-on: [self-hosted, Linux, X64]
     strategy:
