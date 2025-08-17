@@ -24,13 +24,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
     - name: Configure AWS credentials (AssumeRole)
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::392329150290:role/terraform-assume-role
         aws-region: ap-northeast-1
         role-duration-seconds: 3600
-        role-chaining: true 
 
     - name: Verify AWS authentication
       run: |
@@ -47,7 +51,6 @@ jobs:
       run: terraform init
 
     - name: Terraform plan
-      if: github.event_name === 'pull_request'
       working-directory: ./env/${{ github.event.inputs.environment }}
       run: terraform plan
   

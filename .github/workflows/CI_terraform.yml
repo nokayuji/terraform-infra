@@ -33,7 +33,6 @@ jobs:
         role-to-assume: arn:aws:iam::392329150290:role/terraform-assume-role
         aws-region: ap-northeast-1
         role-duration-seconds: 3600
-        audience: sts.amazonaws.com
 
     - name: Verify AWS authentication
       run: |
@@ -59,7 +58,7 @@ jobs:
       continue-on-error: true
 
     - name: Run TFLint
-      run: tflint --recursive -c "./.tflint.hcl"
+      run: tflint --recursive
       continue-on-error: true
 
     - name: Terraform Init all directories
