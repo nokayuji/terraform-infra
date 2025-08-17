@@ -12,7 +12,7 @@
 
 
 resource "aws_s3_bucket" "test" {
-  bucket        = "dev-test-nagaoka"
+  bucket        = "${var.sys}-${var.env}-nagaoka-test"
   force_destroy = true
 }
 
