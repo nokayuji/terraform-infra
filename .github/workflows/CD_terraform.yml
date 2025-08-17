@@ -7,7 +7,6 @@ on:
         description: 'Choose environment to deploy'
         required: true
         default: 'dev'
-        type: choice
 
 jobs:
   CD_terraform:
