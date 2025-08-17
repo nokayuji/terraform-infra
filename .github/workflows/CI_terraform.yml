@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         environment: [dev] # 現状1環境のみ 
-    timeout-munetes: 60
+    timeout-minutes: 60
     permissions:
       # workload identity連携によるToken発行には以下権限が必要
       id-token: write

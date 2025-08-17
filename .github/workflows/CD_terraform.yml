@@ -13,7 +13,7 @@ on:
 jobs:
   CD_terraform:
     runs-on: [self-hosted, Linux, X64]
-    timeout-munetes: 60
+    timeout-minutes: 60
     environment: ${{ github.event.inputs.environment }}
     permissions:
       # workload identity連携によるToken発行には以下権限が必要
