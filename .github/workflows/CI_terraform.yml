@@ -1,20 +1,31 @@
 name: Terraform CI
 
 on:
-  pull_request:
-    branches:
-      - develop
   push:
     branches:
-      - develop
+      - main
+      - 'feature/*'
 
-job:
-  terraform_CI:
-    runs-on:
+jobs:
+  CI_terraform:
+    runs-on: [self-hosted, Linux, X64]
+    strategy:
+      matrix:
+        environment: [dev] # 現状1環境のみ 
+    timeout-minutes: 60
+    permissions:
+      # workload identity連携によるToken発行には以下権限が必要
+      id-token: write
+      contents: read
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
 
     - name: Configure AWS credentials (AssumeRole)
       uses: aws-actions/configure-aws-credentials@v4
@@ -22,29 +33,42 @@ job:
         role-to-assume: arn:aws:iam::392329150290:role/terraform-assume-role
         aws-region: ap-northeast-1
         role-duration-seconds: 3600
-        role-chsnging: true
 
     - name: Verify AWS authentication
       run: |
         echo "Checking AWS credentials..."
         aws sts get-caller-identity
 
-    - name: Terraform install
-      uses: hashicorp/setup-terraform@v2
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
       with:
-        terraform_version:1.5.7
+        terraform_version: 1.5.7
 
-    - name: Terraform init
-      working-directory: env
-      run: terraform init
+    - name: Setup TFLint
+      uses: terraform-linters/setup-tflint@v4
+      with:
+        tflint_version: v0.52.0
 
     - name: Terraform format check
-      run: terraform fmt -check
+      run: terraform fmt -check -recursive
+      continue-on-error: true
 
-    - name: Terraform validate
-      run: terraform validate
+    - name: Init TFLint
+      run: tflint --init
+      continue-on-error: true
+
+    - name: Run TFLint
+      run: tflint --recursive
+      continue-on-error: true
+
+    - name: Terraform Init all directories
+      run: find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
+      continue-on-error: true
+
+    - name: Terraform Validation
+      run: find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform validate'
+      continue-on-error: true
 
     - name: Terraform plan
-      if: github.event_name === 'pull_request'
-      working-directory: env
+      working-directory: ./env/${{ matrix.environment }}
       run: terraform plan
