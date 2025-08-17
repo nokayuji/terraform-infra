@@ -26,7 +26,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-        cache: 'npm'         # npm の依存をキャッシュ（速くなる）
 
     - name: Configure AWS credentials (AssumeRole)
       uses: aws-actions/configure-aws-credentials@v4
