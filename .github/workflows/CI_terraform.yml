@@ -90,10 +90,9 @@ jobs:
         export TF_PLUGIN_CACHE_DIR="/home/ec2-user/.terraform.d/plugin-cache"
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
         ls -la "$TF_PLUGIN_CACHE_DIR"
-        cd /home/ec2-user/.terraform.d/plugin-cache/registry.terraform.io
+        cd /home/ec2-user/.terraform.d/plugin-cache/registry.terraform.io/hashicorp
         ls -la
         find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
-        ls -la
       continue-on-error: true
         #export TF_PLUGIN_CACHE_DIR="/home/ec2-user/.terraform.d/plugin-cache"
         #mkdir -p "$TF_PLUGIN_CACHE_DIR"
@@ -101,6 +100,10 @@ jobs:
     - name: Terraform Validation
       run: find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform validate'
       continue-on-error: true
+
+    - name: Confilm
+      run: |
+        ls -la
 
     - name: Select Terraform Workspace
       working-directory: env/${{ matrix.environment }}
