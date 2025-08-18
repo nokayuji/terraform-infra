@@ -88,21 +88,21 @@ variable "vpc_id" {
 #   type = number
 # }
 
-variable "ami_id" {
-  type = string
-}
+# variable "ami_id" {
+#   type = string
+# }
 
-variable "instance_type" {
-  type = string
-}
+# variable "instance_type" {
+#   type = string
+# }
 
 # #variable "associate_public_ip_address" {
 # #  type = string
 # #}
 
-variable "disable_api_termination" {
-  type = bool
-}
+# variable "disable_api_termination" {
+#   type = bool
+# }
 
 # variable "vpc_id" {
 #   type = string
