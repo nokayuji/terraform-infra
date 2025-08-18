@@ -59,7 +59,13 @@ jobs:
         tflint_version: v0.52.0
 
     - name: Config Terraform Plugin Cache
-      run: mkdir -p $TF_PLUGIN_CACHE_DIR
+      run: |
+        cd $HOME
+        pwd
+        ls -la
+        mkdir -p $TF_PLUGIN_CACHE_DIR
+        pwd
+        ls -la
 
     - name: Cache Terraform Plugins
       uses: actions/cache@v4
