@@ -87,7 +87,7 @@ jobs:
         cd /home/ec2-user
         export TF_PLUGIN_CACHE_DIR="/home/ec2-user/.terraform.d/plugin-cache"
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
-        cd /home/ec2-user/.terraform.d/plugin-cache/registry.terraform.io/hashicorp/aws/6.9.0/linux_amd64
+        cd /home/ec2-user/.terraform.d/plugin-cache/registry.terraform.io/hashicorp/null
         ls -la
         cd /home/ec2-user
         find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
