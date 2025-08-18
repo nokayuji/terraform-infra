@@ -68,7 +68,7 @@ jobs:
       continue-on-error: true
 
     - name: Terraform Init All Dir
-      run: find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init terraform init -plugin-dir=.terraform.d/plugin-cache'
+      run: find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init -plugin-dir=$HOME/.terraform.d/plugin-cache'
       continue-on-error: true
 
     - name: Terraform Validation
