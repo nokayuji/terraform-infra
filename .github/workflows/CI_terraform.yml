@@ -10,7 +10,7 @@ jobs:
   CI_terraform:
     runs-on: [self-hosted, Linux, X64]
     env: 
-      TF_PLUGIN_CACHE_DIR: $HOME/.terraform.d/plugin-cache
+      TF_PLUGIN_CACHE_DIR: /home/ec2-user/.terraform.d/plugin-cache
     strategy:
       matrix:
         environment: [dev] # 現状1環境のみ 
@@ -67,7 +67,6 @@ jobs:
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
         pwd
         ls -la
-        sudo rm -r /root/.terraform.d
 
     - name: Cache Terraform Plugins
       uses: actions/cache@v4
