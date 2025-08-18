@@ -79,26 +79,20 @@ jobs:
       run: tflint --recursive
       continue-on-error: true
 
-    - name: Terraform Init All Dir
+    - name: Terraform Init
       env: 
         TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
       run: |
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
         sudo chown -R ec2-user:ec2-user "$TF_PLUGIN_CACHE_DIR"
-        cd ${{ github.workspace }}
-        find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
-      continue-on-error: true
-        #export TF_PLUGIN_CACHE_DIR="/home/ec2-user/.terraform.d/plugin-cache"
-        #mkdir -p "$TF_PLUGIN_CACHE_DIR"
-        #find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
+        cd env/${{ matrix.environment }}
+        terraform init
+
     - name: Terraform Validation
-      run: find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform validate'
+      working-directory: env/${{ matrix.environment }}
+      run: terraform validate
       continue-on-error: true
-
-    - name: Confilm
-      run: |
-        ls -la
-
+      
     - name: Select Terraform Workspace
       working-directory: env/${{ matrix.environment }}
       run: |
@@ -113,3 +107,9 @@ jobs:
     - name: Terraform Plan
       working-directory: env/${{ matrix.environment }}
       run: terraform plan
+
+
+
+        #export TF_PLUGIN_CACHE_DIR="/home/ec2-user/.terraform.d/plugin-cache"
+        #mkdir -p "$TF_PLUGIN_CACHE_DIR"
+        #find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
