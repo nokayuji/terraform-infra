@@ -70,5 +70,5 @@ jobs:
       continue-on-error: true
 
     - name: Terraform plan
-      working-directory: ./env/${{ matrix.environment }}
+      working-directory: env/${{ matrix.environment }}
       run: terraform plan
