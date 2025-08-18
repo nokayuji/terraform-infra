@@ -73,9 +73,10 @@ jobs:
       continue-on-error: true
 
     - name: Terraform Init All Dir
-      env: 
-        TF_PLUGIN_CACHE_DIR: $HOME/.terraform.d/plugin-cache
+     # env: 
+       # TF_PLUGIN_CACHE_DIR: $HOME/.terraform.d/plugin-cache
       run: |
+        export TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache
         mkdir -p $TF_PLUGIN_CACHE_DIR
         find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
       continue-on-error: true
