@@ -50,13 +50,17 @@ jobs:
         tflint_version: v0.52.0
 
     - name: Prepare Terraform Plugin Cache Dir
-      run: mkdir -p $HOME/.terraform.d/plugin-cache
+      run: |
+          echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' >~/.terraformrc
+          mkdir --parents ~/.terraform.d/plugin-cache
 
     - name: Cache Terraform Plugins
-      uses: actions/cache@v4
+      uses: actions/cache@v3
       with:
-        path: $HOME/.terraform.d/plugin-cache
+        path: ~/.terraform.d/plugin-cache
         key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+        restore-keys: |
+            ${{ runner.os }}-terraform-
 
     - name: Terraform Format Check
       run: terraform fmt -check -recursive
@@ -75,8 +79,8 @@ jobs:
         find . -name "*.tf" -exec dirname {} \; | sort -u | \
         xargs -I {} sh -c '
           cd "{}"
-          if [ -d "$HOME/.terraform.d/plugin-cache" ] && [ "$(ls -A $HOME/.terraform.d/plugin-cache)" ]; then
-            terraform init -plugin-dir=$HOME/.terraform.d/plugin-cache
+          if [ -d "~/.terraform.d/plugin-cache" ] && [ "$(ls -A ~/.terraform.d/plugin-cache)" ]; then
+            terraform init -plugin-dir=~/.terraform.d/plugin-cache
           else
             terraform init
           fi
