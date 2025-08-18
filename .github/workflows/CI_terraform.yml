@@ -80,14 +80,13 @@ jobs:
       continue-on-error: true
 
     - name: Terraform Init All Dir
-     # env: 
-       # TF_PLUGIN_CACHE_DIR: $HOME/.terraform.d/plugin-cache
+      env: 
+        TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}//.terraform.d/plugin-cache
       run: |
-        export TF_PLUGIN_CACHE_DIR="/${{ github.workspace }}/.terraform.d/plugin-cache"
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
         sudo chown -R ec2-user:ec2-user "$TF_PLUGIN_CACHE_DIR"
         cd ${{ github.workspace }}
-        find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init -plugin-dir="${{ github.workspace }}/.terraform.d/plugin-cache" || terraform init'
+        find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init"
       continue-on-error: true
         #export TF_PLUGIN_CACHE_DIR="/home/ec2-user/.terraform.d/plugin-cache"
         #mkdir -p "$TF_PLUGIN_CACHE_DIR"
