@@ -64,7 +64,7 @@ jobs:
     - name: Cache Terraform Plugins
       uses: actions/cache@v3
       with:
-        path: /home/ec2-user/.terraform.d/plugin-cache
+        path: ~/.terraform.d/plugin-cache
         key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
         restore-keys: |
             ${{ runner.os }}-terraform-
@@ -83,10 +83,9 @@ jobs:
 
     - name: Terraform Init
       env: 
-        TF_PLUGIN_CACHE_DIR: /home/ec2-user/.terraform.d/plugin-cache
+        TF_PLUGIN_CACHE_DIR: ~/.terraform.d/plugin-cache
       run: |
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
-        sudo chown -R ec2-user:ec2-user "$TF_PLUGIN_CACHE_DIR"
         cd env/${{ matrix.environment }}
         terraform init
 
@@ -115,3 +114,5 @@ jobs:
         #export TF_PLUGIN_CACHE_DIR="/home/ec2-user/.terraform.d/plugin-cache"
         #mkdir -p "$TF_PLUGIN_CACHE_DIR"
         #find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
+
+         # sudo chown -R ec2-user:ec2-user "$TF_PLUGIN_CACHE_DIR"
