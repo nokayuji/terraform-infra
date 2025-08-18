@@ -60,17 +60,14 @@ jobs:
 
     - name: Config Terraform Plugin Cache
       run: |
-        cd $HOME
+        cd ~/
         pwd
         ls -la
         export TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
         pwd
         ls -la
-        sudo -i 
-        sudo cd /root
-        sudo pwd
-        sudo ls -la
+        sudo rm -r /root/.terraform.d/plugin-cache
 
     - name: Cache Terraform Plugins
       uses: actions/cache@v4
