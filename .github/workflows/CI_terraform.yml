@@ -55,7 +55,7 @@ jobs:
     - name: Cache Terraform Plugins
       uses: actions/cache@v4
       with:
-        path: .terraform.d/plugin-cache
+        path: $HOME/.terraform.d/plugin-cache
         key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
 
     - name: Terraform Format Check
@@ -71,7 +71,16 @@ jobs:
       continue-on-error: true
 
     - name: Terraform Init All Dir
-      run: find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init -plugin-dir=$HOME/.terraform.d/plugin-cache || terraform init'
+      run: |
+        find . -name "*.tf" -exec dirname {} \; | sort -u | \
+        xargs -I {} sh -c '
+          cd "{}"
+          if [ -d "$HOME/.terraform.d/plugin-cache" ] && [ "$(ls -A $HOME/.terraform.d/plugin-cache)" ]; then
+            terraform init -plugin-dir=$HOME/.terraform.d/plugin-cache
+          else
+            terraform init
+          fi
+        '
       continue-on-error: true
 
     - name: Terraform Validation
@@ -81,8 +90,16 @@ jobs:
     - name: Select Terraform Workspace
       working-directory: env/${{ matrix.environment }}
       run: |
-        terraform workspace select ${{ matrix.environment }} || terraform workspace new ${{ matrix.environment }}
+        if terraform workspace list | grep -qw "${{ matrix.environment }}"; then
+          echo "Workspace ${{ matrix.environment }} exists. Selecting it."
+          terraform workspace select "${{ matrix.environment }}"
+        else
+          echo "Workspace ${{ matrix.environment }} does not exist. Creating it."
+          terraform workspace new "${{ matrix.environment }}"
+        fi
 
     - name: Terraform Plan
       working-directory: env/${{ matrix.environment }}
       run: terraform plan
+        # terraform workspace select ${{ matrix.environment }} || terraform workspace new ${{ matrix.environment }}
+#       run: find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init -plugin-dir=$HOME/.terraform.d/plugin-cache || terraform init'
