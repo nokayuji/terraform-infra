@@ -9,8 +9,8 @@ on:
 jobs:
   CI_terraform:
     runs-on: [self-hosted, Linux, X64]
-    env: 
-      TF_PLUGIN_CACHE_DIR: $HOME/.terraform.d/plugin-cache
+    #env: 
+      #TF_PLUGIN_CACHE_DIR: $HOME/.terraform.d/plugin-cache
     strategy:
       matrix:
         environment: [dev] # 現状1環境のみ 
@@ -83,6 +83,7 @@ jobs:
      # env: 
        # TF_PLUGIN_CACHE_DIR: $HOME/.terraform.d/plugin-cache
       run: |
+        export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
         ls -la
         find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
