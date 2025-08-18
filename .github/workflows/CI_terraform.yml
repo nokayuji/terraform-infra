@@ -78,9 +78,11 @@ jobs:
       run: |
         export TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache
         mkdir -p $TF_PLUGIN_CACHE_DIR
-        find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
+        for dir in $(find . -name "*.tf" -exec dirname {} \; | sort -u); do
+          TF_PLUGIN_CACHE_DIR=$TF_PLUGIN_CACHE_DIR terraform -chdir="$dir" init
+        done
       continue-on-error: true
-
+        # find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
     - name: Terraform Validation
       run: find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform validate'
       continue-on-error: true
