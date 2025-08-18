@@ -68,8 +68,8 @@ jobs:
         pwd
         ls -la
         sudo -i 
-        cd /root
-        ls -la
+        sudo cd /root
+        sudo ls -la
 
     - name: Cache Terraform Plugins
       uses: actions/cache@v4
