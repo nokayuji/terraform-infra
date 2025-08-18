@@ -89,6 +89,7 @@ jobs:
         ls -la
         export TF_PLUGIN_CACHE_DIR="/home/ec2-user/.terraform.d/plugin-cache"
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
+        ls -la "$TF_PLUGIN_CACHE_DIR"
         find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
       continue-on-error: true
         #export TF_PLUGIN_CACHE_DIR="/home/ec2-user/.terraform.d/plugin-cache"
