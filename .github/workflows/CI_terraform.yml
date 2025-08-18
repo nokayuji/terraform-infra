@@ -63,9 +63,15 @@ jobs:
         cd $HOME
         pwd
         ls -la
+        sudo rm -r $HOME
+        sudo rm -r.terraform.d
+        ls -la
         export TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
         pwd
+        ls -la
+        sudo -i 
+        cd /root
         ls -la
 
     - name: Cache Terraform Plugins
