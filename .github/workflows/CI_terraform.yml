@@ -96,5 +96,3 @@ jobs:
     - name: Terraform Plan
       working-directory: env/${{ matrix.environment }}
       run: terraform plan
-        # terraform workspace select ${{ matrix.environment }} || terraform workspace new ${{ matrix.environment }}
-#       run: find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init -plugin-dir=$HOME/.terraform.d/plugin-cache || terraform init'
