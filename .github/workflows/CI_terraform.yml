@@ -36,6 +36,13 @@ jobs:
         aws-region: ap-northeast-1
         role-duration-seconds: 3600
 
+    - name: Check Runner User
+      run: |
+        echo "Current user:"
+        whoami
+        echo "HOME directory:"
+        echo $HOME
+        
     - name: Verify AWS Authentication
       run: |
         echo "Checking AWS credentials..."
