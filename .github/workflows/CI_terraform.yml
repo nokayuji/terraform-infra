@@ -92,7 +92,7 @@ jobs:
     - name: Terraform Init
       run: |
         cd env/${{ matrix.environment }}
-        terraform init
+        terraform init -upgrade
 
     - name: Terraform Validation
       working-directory: env/${{ matrix.environment }}
