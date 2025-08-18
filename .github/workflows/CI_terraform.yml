@@ -88,6 +88,10 @@ jobs:
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
         cd "$HOME"
         ls -la
+        cd .terraform.d
+        ls -la
+        cd plugin-cache
+        ls -la
         find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
       continue-on-error: true
         # find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
