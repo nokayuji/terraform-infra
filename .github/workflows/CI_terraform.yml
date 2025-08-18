@@ -42,7 +42,7 @@ jobs:
         whoami
         echo "HOME directory:"
         echo $HOME
-        
+
     - name: Verify AWS Authentication
       run: |
         echo "Checking AWS credentials..."
@@ -64,7 +64,7 @@ jobs:
     - name: Cache Terraform Plugins
       uses: actions/cache@v3
       with:
-        path: ${{ github.workspace }}/.terraform.d/plugin-cache
+        path: /home/ec2-user/.terraform.d/plugin-cache
         key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
         restore-keys: |
             ${{ runner.os }}-terraform-
@@ -83,7 +83,7 @@ jobs:
 
     - name: Terraform Init
       env: 
-        TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
+        TF_PLUGIN_CACHE_DIR: /home/ec2-user/.terraform.d/plugin-cache
       run: |
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
         sudo chown -R ec2-user:ec2-user "$TF_PLUGIN_CACHE_DIR"
