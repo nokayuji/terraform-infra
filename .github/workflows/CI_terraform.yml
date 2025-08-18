@@ -83,13 +83,10 @@ jobs:
      # env: 
        # TF_PLUGIN_CACHE_DIR: $HOME/.terraform.d/plugin-cache
       run: |
-        pwd
-        cd /home/ec2-user
         export TF_PLUGIN_CACHE_DIR="/home/ec2-user/.terraform.d/plugin-cache"
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
-        cd /home/ec2-user/.terraform.d/plugin-cache/registry.terraform.io/hashicorp/null/3.2.4/linux_amd64
-        ls -la
-        cd /home/ec2-user
+        sudo chown -R ec2-user:ec2-user "$TF_PLUGIN_CACHE_DIR"
+        cd /home/ec2-user/actions-runner/_work/terraform-infra/terraform-infra
         find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
       continue-on-error: true
         #export TF_PLUGIN_CACHE_DIR="/home/ec2-user/.terraform.d/plugin-cache"
