@@ -64,7 +64,7 @@ jobs:
     - name: Cache Terraform Plugins
       uses: actions/cache@v3
       with:
-        path: ~/.terraform.d/plugin-cache
+        path: /root/.terraform.d/plugin-cache
         key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
         restore-keys: |
             ${{ runner.os }}-terraform-
@@ -83,7 +83,7 @@ jobs:
 
     - name: Terraform Init
       env: 
-        TF_PLUGIN_CACHE_DIR: ~/.terraform.d/plugin-cache
+        TF_PLUGIN_CACHE_DIR: /root/.terraform.d/plugin-cache
       run: |
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
         cd env/${{ matrix.environment }}
