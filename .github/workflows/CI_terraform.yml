@@ -84,7 +84,7 @@ jobs:
        # TF_PLUGIN_CACHE_DIR: $HOME/.terraform.d/plugin-cache
       run: |
         mkdir -p $TF_PLUGIN_CACHE_DIR
-        ls -la $TF_PLUGIN_CACHE_DIR
+        ls -la
         find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
       continue-on-error: true
         # find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
