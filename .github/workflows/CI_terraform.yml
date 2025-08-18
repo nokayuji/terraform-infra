@@ -79,7 +79,7 @@ jobs:
         find . -name "*.tf" -exec dirname {} \; | sort -u | \
         xargs -I {} sh -c '
           cd "{}"
-          if [ -d "~/.terraform.d/plugin-cache" ] && [ "$(ls -A ~/.terraform.d/plugin-cache)" ]; then
+          if [ -d ~/.terraform.d/plugin-cache ] && [ "$(ls -A ~/.terraform.d/plugin-cache)" ]; then
             terraform init -plugin-dir=~/.terraform.d/plugin-cache
           else
             terraform init
