@@ -84,7 +84,7 @@ jobs:
        # TF_PLUGIN_CACHE_DIR: $HOME/.terraform.d/plugin-cache
       run: |
         pwd
-        cd ~
+        cd /home/ec2-user
         pwd
         ls -la
       continue-on-error: true
