@@ -54,6 +54,7 @@ jobs:
       with:
         path: .terraform.d/plugin-cache
         key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+      run: mkdir -p $HOME/.terraform.d/plugin-cache
 
     - name: Terraform Format Check
       run: terraform fmt -check -recursive
