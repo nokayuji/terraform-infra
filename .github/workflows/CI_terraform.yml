@@ -9,6 +9,8 @@ on:
 jobs:
   CI_terraform:
     runs-on: [self-hosted, Linux, X64]
+    env: 
+      TF_PLUGIN_CACHE_DIR: $HOME/.terraform.d/plugin-cache
     strategy:
       matrix:
         environment: [dev] # 現状1環境のみ 
@@ -50,14 +52,12 @@ jobs:
         tflint_version: v0.52.0
 
     - name: Config Terraform Plugin Cache
-      run: |
-          echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' >~/.terraformrc
-          mkdir --parents ~/.terraform.d/plugin-cache
+      run: mkdir -p $TF_PLUGIN_CACHE_DIR
 
     - name: Cache Terraform Plugins
       uses: actions/cache@v3
       with:
-        path: ~/.terraform.d/plugin-cache
+        path: $HOME/.terraform.d/plugin-cache
         key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
         restore-keys: |
             ${{ runner.os }}-terraform-
@@ -75,16 +75,7 @@ jobs:
       continue-on-error: true
 
     - name: Terraform Init All Dir
-      run: |
-        find . -name "*.tf" -exec dirname {} \; | sort -u | \
-        xargs -I {} sh -c '
-          cd "{}"
-          if [ -d ~/.terraform.d/plugin-cache ] && [ "$(ls -A ~/.terraform.d/plugin-cache)" ]; then
-            terraform init -plugin-dir=~/.terraform.d/plugin-cache
-          else
-            terraform init
-          fi
-        '
+      run: find . -name "*.tf" -exec dirname {} \; | sort -u | xargs -I {} sh -c 'cd "{}" && terraform init'
       continue-on-error: true
 
     - name: Terraform Validation
