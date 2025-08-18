@@ -9,8 +9,8 @@ on:
 jobs:
   CI_terraform:
     runs-on: [self-hosted, Linux, X64]
-    #env: 
-      #TF_PLUGIN_CACHE_DIR: $HOME/.terraform.d/plugin-cache
+    env: 
+      TF_PLUGIN_CACHE_DIR: $HOME/.terraform.d/plugin-cache
     strategy:
       matrix:
         environment: [dev] # 現状1環境のみ 
@@ -58,13 +58,13 @@ jobs:
       with:
         tflint_version: v0.52.0
 
-   # - name: Config Terraform Plugin Cache
-   #   run: mkdir -p $TF_PLUGIN_CACHE_DIR
+    - name: Config Terraform Plugin Cache
+      run: mkdir -p $TF_PLUGIN_CACHE_DIR
 
     - name: Cache Terraform Plugins
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
-        path: /root/.terraform.d/plugin-cache
+        path: ~/.terraform.d/plugin-cache
         key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
         restore-keys: |
             ${{ runner.os }}-terraform-
@@ -82,10 +82,7 @@ jobs:
       continue-on-error: true
 
     - name: Terraform Init
-      env: 
-        TF_PLUGIN_CACHE_DIR: /root/.terraform.d/plugin-cache
       run: |
-        mkdir -p "$TF_PLUGIN_CACHE_DIR"
         cd env/${{ matrix.environment }}
         terraform init
 
