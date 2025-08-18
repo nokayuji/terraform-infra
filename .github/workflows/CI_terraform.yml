@@ -69,6 +69,7 @@ jobs:
         ls -la
         sudo -i 
         sudo cd /root
+        sudo pwd
         sudo ls -la
 
     - name: Cache Terraform Plugins
