@@ -80,7 +80,6 @@ jobs:
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: myimage:latest
         scan-type: config
         scan-ref: .
         format: table
