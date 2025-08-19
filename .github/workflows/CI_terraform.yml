@@ -102,11 +102,15 @@ jobs:
         ls -la
         cd .terraform
         ls -la
-        cd ..
+        cd providers/registry.terraform.io/hashicorp/aws
+        ls -la
+        cd ../../../../../
         export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
         terraform init
         ls -la
         cd .terraform
+        ls -la
+        cd providers/registry.terraform.io/hashicorp/aws
         ls -la
 
     - name: Terraform Validation
