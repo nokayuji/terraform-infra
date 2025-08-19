@@ -94,7 +94,12 @@ jobs:
         cd env/${{ matrix.environment }}
         pwd
         ls -la
+        cd .terraform
+        ls -la
+        cd ..
         terraform init
+        ls -la
+        cd .terraform
         ls -la
 
 # export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
