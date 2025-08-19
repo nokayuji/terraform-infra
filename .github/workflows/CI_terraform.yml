@@ -50,22 +50,35 @@ jobs:
       with:
         terraform_version: 1.5.7
 
-    - name: Setup TFLint
-      uses: terraform-linters/setup-tflint@v4
-      with:
-        tflint_version: v0.52.0
+    # - name: Setup TFLint
+    #   uses: terraform-linters/setup-tflint@v4
+    #   with:
+    #     tflint_version: v0.52.0
 
     - name: Terraform Format Check
       run: terraform fmt -check -recursive
       continue-on-error: true
 
-    - name: Init TFLint
-      run: tflint --init
-      continue-on-error: true
+    # - name: Init TFLint
+    #   run: tflint --init
+    #   continue-on-error: true
+
+    # - name: Run TFLint
+    #   run: tflint --recursive
+    #   continue-on-error: true
 
     - name: Run TFLint
-      run: tflint --recursive
-      continue-on-error: true
+      uses: reviewdog/action-tflint@master
+      with:
+        github_token: ${{ secrets.github_token }}
+        level: "warning,error"
+        reporter: github-pr-review
+        fail_on_error: true
+        filter_mode: "nofilter"
+        flags: "--recursive"
+        working_directory: .
+        tflint_init: true
+        tflint_version: "v0.52.0"
 
     - name: Terraform Init
       working-directory: env/${{ matrix.environment }}
@@ -79,9 +92,9 @@ jobs:
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        scan-type: 'config'
+        scan-type: "config"
         hide-progress: true
-        severity: 'CRITICAL,HIGH'
+        severity: "CRITICAL,HIGH"
         scan-ref: .
         output: trivy-scan-result.txt
 
