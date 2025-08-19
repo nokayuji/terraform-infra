@@ -9,8 +9,8 @@ on:
 jobs:
   CI_terraform:
     runs-on: [self-hosted, Linux, X64]
-    # env: 
-    #   TF_PLUGIN_CACHE_DIR: /home/ec2-user/.terraform.d/plugin-cache
+    env: 
+      TF_PLUGIN_CACHE_DIR: /home/ec2-user/.terraform.d/plugin-cache
     strategy:
       matrix:
         environment: [dev] # 現状1環境のみ 
@@ -63,17 +63,25 @@ jobs:
         ls -la env/${{ matrix.environment }}
         mkdir -p env/${{ matrix.environment }}/.terraform
         ls -la env/${{ matrix.environment }}
+        mkdir -p ${{ env.TF_PLUGIN_CACHE_DIR }}
+        echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' > $HOME/.terraformrc
+        export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
 
-      # echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' > $HOME/.terraformrc
-      # export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
-
-    - name: Cache Terraform
+    - name: Cache .Terraform
       uses: actions/cache@v4
       with:
         path: env/${{ matrix.environment }}/.terraform
         key: ${{ runner.os }}-terraform-${{ matrix.environment }}-${{ hashFiles('**/.terraform.lock.hcl') }}
         restore-keys: |
             ${{ runner.os }}-terraform-${{ matrix.environment }}-
+
+    - name: Cache Terraform Plugin
+      uses: actions/cache@v4
+      with:
+        path: /home/ec2-user/.terraform.d/plugin-cache
+        key: ${{ runner.os }}-terraform-plugins-${{ matrix.environment }}
+        restore-keys: |
+          ${{ runner.os }}-terraform-plugins-${{ matrix.environment }}-
 
     - name: Terraform Format Check
       run: terraform fmt -check -recursive
@@ -95,12 +103,11 @@ jobs:
         cd .terraform
         ls -la
         cd ..
+        export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
         terraform init
         ls -la
         cd .terraform
         ls -la
-
-# export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
 
     - name: Terraform Validation
       working-directory: env/${{ matrix.environment }}
