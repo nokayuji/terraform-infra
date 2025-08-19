@@ -50,18 +50,18 @@ jobs:
       with:
         terraform_version: 1.5.7
 
-    - name: Setup TFLint
-      uses: terraform-linters/setup-tflint@v4
-      with:
-        tflint_version: v0.52.0
+    # - name: Setup TFLint
+    #   uses: terraform-linters/setup-tflint@v4
+    #   with:
+    #     tflint_version: v0.52.0
 
     - name: Terraform Format Check
       run: terraform fmt -check -recursive
       continue-on-error: true
 
-    - name: Init TFLint
-      run: tflint --init
-      continue-on-error: true
+    # - name: Init TFLint
+    #   run: tflint --init
+    #   continue-on-error: true
 
     # - name: Run TFLint
     #   run: tflint --recursive
@@ -75,9 +75,9 @@ jobs:
         reporter: github-pr-review
         fail_on_error: true
         filter_mode: "nofilter"
-        flags: "--recursive"
+        #flags: "--recursive"
         working_directory: .
-        #tflint_init: true
+        tflint_init: true
         tflint_version: "v0.52.0"
 
     - name: Terraform Init
