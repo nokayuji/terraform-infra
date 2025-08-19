@@ -9,8 +9,6 @@ on:
 jobs:
   CI_terraform:
     runs-on: [self-hosted, Linux, X64]
-    env: 
-      TF_PLUGIN_CACHE_DIR: /home/ec2-user/.terraform.d/plugin-cache
     strategy:
       matrix:
         environment: [dev] # 現状1環境のみ 
