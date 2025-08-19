@@ -9,8 +9,8 @@ on:
 jobs:
   CI_terraform:
     runs-on: [self-hosted, Linux, X64]
-    env: 
-      TF_PLUGIN_CACHE_DIR: /home/ec2-user/.terraform.d/plugin-cache
+    # env: 
+    #   TF_PLUGIN_CACHE_DIR: /home/ec2-user/.terraform.d/plugin-cache
     strategy:
       matrix:
         environment: [dev] # 現状1環境のみ 
@@ -58,24 +58,24 @@ jobs:
       with:
         tflint_version: v0.52.0
 
-    - name: Config Terraform Plugin Cache
-      run: |
-        cd ${{ env.TF_PLUGIN_CACHE_DIR }}
-        pwd
-        ls -la
-        mkdir -p ${{ env.TF_PLUGIN_CACHE_DIR }}
-        echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' > $HOME/.terraformrc
-        export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
-        pwd
-        ls -la
+    # - name: Config Terraform Plugin Cache
+    #   run: |
+    #     cd ${{ env.TF_PLUGIN_CACHE_DIR }}
+    #     pwd
+    #     ls -la
+    #     mkdir -p ${{ env.TF_PLUGIN_CACHE_DIR }}
+    #     echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' > $HOME/.terraformrc
+    #     export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
+    #     pwd
+    #     ls -la
 
-    - name: Cache Terraform Plugins
-      uses: actions/cache@v4
-      with:
-        path: ${{ env.TF_PLUGIN_CACHE_DIR }}
-        key: ${{ runner.os }}-terraform-cache-${{ hashFiles('**/.terraform.lock.hcl') }}
-        restore-keys: |
-            ${{ runner.os }}-terraform-cache-
+    # - name: Cache Terraform Plugins
+    #   uses: actions/cache@v4
+    #   with:
+    #     path: ${{ env.TF_PLUGIN_CACHE_DIR }}
+    #     key: ${{ runner.os }}-terraform-cache-${{ hashFiles('**/.terraform.lock.hcl') }}
+    #     restore-keys: |
+    #         ${{ runner.os }}-terraform-cache-
 
     - name: Terraform Format Check
       run: terraform fmt -check -recursive
@@ -94,9 +94,10 @@ jobs:
         cd env/${{ matrix.environment }}
         pwd
         ls -la
-        export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
         terraform init
         ls -la
+
+# export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
 
     - name: Terraform Validation
       working-directory: env/${{ matrix.environment }}
