@@ -15,6 +15,7 @@ jobs:
       # workload identity連携によるToken発行には以下権限が必要
       id-token: write
       contents: read
+      pull-requests: write
 
     steps:
     - name: Check Runner User
