@@ -82,8 +82,25 @@ jobs:
       with:
         scan-type: config
         scan-ref: .
-        format: table
+        output: trivy-scan-result.txt
         severity: CRITICAL,HIGH
+
+    - name: Format Trivy Scan Result
+      run: |
+        if [ -s trivy-scan-result.txt ]; then
+          # ファイルに内容がある場合
+          echo -e "## 脆弱性スキャン結果\n<details><summary>詳細</summary>\n\n\`\`\`\n$(cat trivy-scan-result.txt)\n\`\`\`\n</details>" > formatted-trivy-result.md
+        else
+          # ファイルが空の場合
+          echo -e "## 脆弱性スキャン結果\n脆弱性が検知されませんでした。" > formatted-trivy-result.md
+        fi
+
+    - name: Comment PR with Trivy scan results
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        GITHUB_TOKEN: ${{ secrets.github_token }}
+        path: formatted-trivy-result.md
 
     - name: Select Terraform Workspace
       working-directory: env/${{ matrix.environment }}
