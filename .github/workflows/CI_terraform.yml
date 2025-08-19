@@ -72,7 +72,7 @@ jobs:
     - name: Cache Terraform Plugins
       uses: actions/cache@v4
       with:
-        path: ~/.terraform.d/plugin-cache
+        path: ${{ env.TF_PLUGIN_CACHE_DIR }}
         key: ${{ runner.os }}-terraform-cache-${{ hashFiles('**/.terraform.lock.hcl') }}
         restore-keys: |
             ${{ runner.os }}-terraform-cache-
@@ -92,7 +92,7 @@ jobs:
     - name: Terraform Init
       run: |
         cd env/${{ matrix.environment }}
-        terraform init -upgrade
+        terraform init
 
     - name: Terraform Validation
       working-directory: env/${{ matrix.environment }}
