@@ -81,7 +81,8 @@ jobs:
       uses: aquasecurity/trivy-action@master
       with:
         scan-type: 'config'
-        severity: 'HIGH,CRITICAL'
+        hide-progress: true
+        severity: 'CRITICAL,HIGH'
         scan-ref: .
         output: trivy-scan-result.txt
 
