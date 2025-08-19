@@ -60,7 +60,7 @@ jobs:
 
     - name: Config Terraform Plugin Cache
       run: |
-        cd ~/
+        cd ${{ env.TF_PLUGIN_CACHE_DIR }}
         pwd
         ls -la
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
@@ -92,7 +92,7 @@ jobs:
     - name: Terraform Init
       run: |
         cd env/${{ matrix.environment }}
-        terraform init
+        terraform init -plugin-dir=${{ env.TF_PLUGIN_CACHE_DIR }}
 
     - name: Terraform Validation
       working-directory: env/${{ matrix.environment }}
