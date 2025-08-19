@@ -58,16 +58,14 @@ jobs:
       with:
         tflint_version: v0.52.0
 
-    # - name: Config Terraform Plugin Cache
-    #   run: |
-    #     cd ${{ env.TF_PLUGIN_CACHE_DIR }}
-    #     pwd
-    #     ls -la
-    #     mkdir -p ${{ env.TF_PLUGIN_CACHE_DIR }}
-    #     echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' > $HOME/.terraformrc
-    #     export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
-    #     pwd
-    #     ls -la
+    - name: Config Terraform Plugin Cache
+      run: |
+        ls -la env/${{ matrix.environment }}
+        mkdir -p env/${{ matrix.environment }}/.terraform
+        ls -la env/${{ matrix.environment }}
+
+      # echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' > $HOME/.terraformrc
+      # export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
 
     - name: Cache Terraform
       uses: actions/cache@v4
