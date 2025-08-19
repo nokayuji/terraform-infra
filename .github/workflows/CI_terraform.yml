@@ -81,6 +81,7 @@ jobs:
       working-directory: env/${{ matrix.environment }}
       run: |
         terraform workspace select ${{ matrix.environment }}
+        terraform init
         if terraform workspace list | grep -qw "${{ matrix.environment }}"; then
           echo "Workspace ${{ matrix.environment }} exists. Selecting it."
           terraform workspace select "${{ matrix.environment }}"
