@@ -86,6 +86,11 @@ jobs:
         scan-ref: .
         output: trivy-scan-result.txt
 
+    - name: Show Trivy scan result
+      run: |
+        ls -la
+        cat trivy-scan-result.txt
+
     - name: Format Trivy Scan Result
       run: |
         if [ -s trivy-scan-result.txt ]; then
