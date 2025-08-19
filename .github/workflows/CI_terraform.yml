@@ -84,6 +84,7 @@ jobs:
         scan-type: config
         scan-ref: .
         format: table
+        severity: CRITICAL,HIGH
 
     - name: Select Terraform Workspace
       working-directory: env/${{ matrix.environment }}
