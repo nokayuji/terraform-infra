@@ -1,10 +1,8 @@
 name: Terraform CI
 
 on:
-  push:
-    branches:
-      - main
-      - 'feature/*'
+  pull_request:
+    types: [opend, reopened, synchronize]
 
 jobs:
   CI_terraform:
@@ -85,11 +83,6 @@ jobs:
         severity: 'CRITICAL,HIGH'
         scan-ref: .
         output: trivy-scan-result.txt
-
-    - name: Show Trivy scan result
-      run: |
-        ls -la
-        cat trivy-scan-result.txt
 
     - name: Format Trivy Scan Result
       run: |
