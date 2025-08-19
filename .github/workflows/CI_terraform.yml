@@ -69,13 +69,13 @@ jobs:
     #     pwd
     #     ls -la
 
-    # - name: Cache Terraform Plugins
-    #   uses: actions/cache@v4
-    #   with:
-    #     path: ${{ env.TF_PLUGIN_CACHE_DIR }}
-    #     key: ${{ runner.os }}-terraform-cache-${{ hashFiles('**/.terraform.lock.hcl') }}
-    #     restore-keys: |
-    #         ${{ runner.os }}-terraform-cache-
+    - name: Cache Terraform
+      uses: actions/cache@v4
+      with:
+        path: env/${{ matrix.environment }}/.terraform
+        key: ${{ runner.os }}-terraform-${{ matrix.environment }}-${{ hashFiles('**/.terraform.lock.hcl') }}
+        restore-keys: |
+            ${{ runner.os }}-terraform-${{ matrix.environment }}-
 
     - name: Terraform Format Check
       run: terraform fmt -check -recursive
