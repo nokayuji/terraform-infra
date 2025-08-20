@@ -62,13 +62,13 @@ jobs:
       uses: reviewdog/action-setup@master
 
     - name: Setup tfcmt
-      id: fmt
       uses: shmokmt/actions-setup-tfcmt@v2
       with:
         version: v4.6.0
 
     - name: Terraform Format Check
-      run: terraform fmt -check -recursive | reviewdog -f=diff  -name="terraform fmt" -reporter=github-pr-review -level=error
+      id: fmt
+      run: terraform fmt -check -recursive | reviewdog -reporter=github-pr-review
       continue-on-error: true
       env:
         REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -76,9 +76,9 @@ jobs:
     - name: Check Format Result
       run: |
         if [ "${{ steps.fmt.conclusion }}" == "success" ]; then
-          echo -e "\033[1;32m前のステップは成功しました\033[0m"
+          echo -e "\033[32mTerraform fmtの実行が成功しました\033[0m"
         else
-          echo -e "\033[1;31m前のステップは失敗しました\033[0m"
+          echo -e "\033[31mTerraform fmtの実行が失敗しました\033[0m"
         fi
 
     # - name: Init TFLint
@@ -90,6 +90,7 @@ jobs:
     #   continue-on-error: true
 
     - name: Run TFLint
+      id: tflint
       uses: reviewdog/action-tflint@master
       with:
         github_token: ${{ secrets.github_token }}
@@ -103,6 +104,13 @@ jobs:
         tflint_config: .tflint.hcl
       continue-on-error: true
 
+    - name: Check Tflint Result
+      run: |
+        if [ "${{ steps.tflint.conclusion }}" == "success" ]; then
+          echo -e "\033[32mtflintの実行が成功しました\033[0m"
+        else
+          echo -e "\033[31mtflintの実行が失敗しました\033[0m"
+        fi
 
     - name: Terraform Init
       working-directory: env/${{ matrix.environment }}
@@ -117,12 +125,13 @@ jobs:
     - name: Check Validate Result
       run: |
         if [ "${{ steps.validate.conclusion }}" == "success" ]; then
-          echo -e "\033[1;32m前のステップは成功しました\033[0m"
+          echo -e "\033[32mTerraform Validateの実行が成功しました\033[0m"
         else
-          echo -e "\033[1;31m前のステップは失敗しました\033[0m"
+          echo -e "\033[31mTerraform Validateの実行が失敗しました\033[0m"
         fi
 
     - name: Run Trivy vulnerability scanner
+      id: trivy
       uses: aquasecurity/trivy-action@master
       with:
         scan-type: "config"
@@ -130,6 +139,14 @@ jobs:
         severity: "CRITICAL,HIGH"
         scan-ref: .
         output: trivy-scan-result.txt
+
+    - name: Check Trivy Result
+      run: |
+        if [ "${{ steps.trivy.conclusion }}" == "success" ]; then
+          echo -e "\033[32mtrivyスキャンの実行に成功しました\033[0m"
+        else
+          echo -e "\033[31mtrivyスキャンの実行に失敗しました\033[0m"
+        fi
 
     - name: Format Trivy Scan Result
       run: |
