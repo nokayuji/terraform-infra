@@ -70,13 +70,15 @@ jobs:
     - name: Terraform Format Check
       run: terraform fmt -check -recursive | reviewdog -f=golangci-lint -name="terraform fmt" -reporter=github-pr-review -level=error
       continue-on-error: true
+      env:
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Check Format Result
       run: |
         if [ "${{ steps.fmt.conclusion }}" == "success" ]; then
-          echo "前のステップは成功しました"
+          echo -e "\033[32m前のステップは成功しました\033[0m"
         else
-          echo "前のステップは失敗しました"
+          echo -e "\033[31m前のステップは失敗しました\033[0m"
         fi
 
     # - name: Init TFLint
@@ -115,9 +117,9 @@ jobs:
     - name: Check Validate Result
       run: |
         if [ "${{ steps.validate.conclusion }}" == "success" ]; then
-          echo "前のステップは成功しました"
+          echo -e "\033[32m前のステップは成功しました\033[0m"
         else
-          echo "前のステップは失敗しました"
+          echo -e "\033[31m前のステップは失敗しました\033[0m"
         fi
 
     - name: Run Trivy vulnerability scanner
