@@ -69,6 +69,7 @@ jobs:
       #continue-on-error: true
 
     - name: Check Format Result
+      if: always()
       run: |
         if [ "${{ steps.fmt.conclusion }}" == "success" ]; then
           echo -e "\033[32mTerraform fmt Succeeded\033[0m"
@@ -100,6 +101,7 @@ jobs:
       #continue-on-error: true
 
     - name: Check Tflint Result
+      if: always()
       run: |
         if [ "${{ steps.tflint.conclusion }}" == "success" ]; then
           echo -e "\033[32mtflint Succeeded\033[0m"
@@ -118,6 +120,7 @@ jobs:
       #continue-on-error: true
 
     - name: Check Validate Result
+      if: always()
       run: |
         if [ "${{ steps.validate.conclusion }}" == "success" ]; then
           echo -e "\033[32mTerraform validate Succeeded\033[0m"
@@ -136,6 +139,7 @@ jobs:
         output: trivy-scan-result.txt
 
     - name: Check Trivy Result
+      if: always()
       run: |
         if [ "${{ steps.trivy.conclusion }}" == "success" ]; then
           echo -e "\033[32mtrivy scan Succeeded\033[0m"
