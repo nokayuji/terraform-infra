@@ -59,13 +59,24 @@ jobs:
     #     tflint_version: v0.52.0
 
     - name: Setup tfcmt
+      id: fmt
       uses: shmokmt/actions-setup-tfcmt@v2
       with:
         version: v4.6.0
 
     - name: Terraform Format Check
-      run: terraform fmt -check -recursive
+      run: terraform fmt -check -recursive | reviewdog -f=golangci-lint -name="terraform fmt" -reporter=github-pr-review -level=error
       continue-on-error: true
+
+    - name: Check 1
+      if: steps.fmt.outputs.has_error == 'true'
+      run: |
+        echo "失敗しました"
+
+    - name: Check 2
+      if: steps.fmt.outputs.has_error == 'false'
+      run: |
+        echo "成功しました"
 
     # - name: Init TFLint
     #   run: tflint --init
@@ -95,9 +106,20 @@ jobs:
       run: terraform init
 
     - name: Terraform Validation
+      id: validate
       working-directory: env/${{ matrix.environment }}
       run: terraform validate
       continue-on-error: true
+
+    - name: Check 1
+      if: steps.validate.outputs.has_error == 'true'
+      run: |
+        echo "失敗しました"
+
+    - name: Check 2
+      if: steps.validate.outputs.has_error == 'false'
+      run: |
+        echo "成功しました"
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
