@@ -67,10 +67,6 @@ jobs:
     #   run: tflint --recursive
     #   continue-on-error: true
 
-    - name: Terraform Init
-      working-directory: env/${{ matrix.environment }}
-      run: terraform init
-      
     - name: Run TFLint
       uses: reviewdog/action-tflint@master
       with:
@@ -83,8 +79,9 @@ jobs:
         #working_directory: .
         tflint_init: true
         tflint_version: "v0.52.0"
-        tflint_target_dir: env/dev
-        tflint_config: env/dev/.tflint.hcl
+        working_directory: env/dev
+        tflint_target_dir: .
+        tflint_config: .tflint.hcl
 
     - name: Terraform Init
       working-directory: env/${{ matrix.environment }}
