@@ -55,6 +55,11 @@ jobs:
     #   with:
     #     tflint_version: v0.52.0
 
+    - name: Setup tfcmt
+      uses: shmokmt/actions-setup-tfcmt@v2
+      with:
+        version: v4.6.0
+
     - name: Terraform Format Check
       run: terraform fmt -check -recursive
       continue-on-error: true
@@ -130,4 +135,4 @@ jobs:
 
     - name: Terraform Plan
       working-directory: env/${{ matrix.environment }}
-      run: terraform plan
+      run: tfcmt plan -patch -- terraform plan -input=false
