@@ -1,11 +1,12 @@
-plugin "terraform" {
-    enabled = true
-    version = "0.2.0"
-    source  = "github.com/terraform-linters/tflint-ruleset-terraform"
-}
-
 plugin "aws" {
     enabled = true
+    deep_check = true
     version = "0.42.0"
     source  = "github.com/terraform-linters/tflint-ruleset-aws"
+}
+
+plugin "terraform" {
+  enabled = true
+  version = "0.13.0"
+  source  = "github.com/terraform-linters/tflint-ruleset-terraform"
 }
