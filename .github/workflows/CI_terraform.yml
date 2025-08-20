@@ -102,15 +102,15 @@ jobs:
       uses: reviewdog/action-tflint@master
       with:
         github_token: ${{ secrets.github_token }}
-        level: 'info,warning,error' # lint検知レベル
+        level: info,warning,error # lint検知レベル
         reporter: github-pr-review # PRにコメントを残す
-        fail_level: 'none'
-        filter_mode: 'diff_context' #リポジトリ内の全てをチェックはせず、PRの変更分のみに限定して検知
-        flags: '--recursive -c ${{ github.workspace }}/.tflint.hcl' # --recursiveで再起的にtfファイルをのぞく。
+        fail_level: none
+        filter_mode: diff_context #リポジトリ内の全てをチェックはせず、PRの変更分のみに限定して検知
+        flags: --recursive -c ${{ github.workspace }}/.tflint.hcl # --recursiveで再起的にtfファイルをのぞく。
         tflint_init: true # 設定ファイル内で追加ルールや除外ルールを更新している可能性があるため念の為毎回init
-        tflint_version: 'v0.52.0'
-        tflint_config: '.tflint.hcl'
-        continue-on-error: true #エラー時でも以降のワークフローを実行
+        tflint_version: v0.52.0
+        tflint_config: .tflint.hcl
+      continue-on-error: true #エラー時でも以降のワークフローを実行
       # reviewdog/action-tflint を用いることで、自前でtflintするより問題の修正箇所がわかりやすかったり、また、PRにコメントをしてくれる。
       # flagsではlint実行時のオプションを引き渡すことができるが、設定ファイルを全てのディレクトリで用意してあげる必要のないよう設定ファイルを指定
 
