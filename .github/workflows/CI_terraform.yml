@@ -45,7 +45,7 @@ jobs:
 
     - name: Verify AWS Authentication
       run: |
-        echo "Checking AWS credentials..."
+        echo -e "\033[32mChecking AWS credentials...\033[0m"
         aws sts get-caller-identity
 
     - name: Setup Terraform
@@ -66,7 +66,7 @@ jobs:
     - name: Terraform Format Check
       id: fmt
       run: terraform fmt -check -recursive
-      continue-on-error: true
+      #continue-on-error: true
 
     - name: Check Format Result
       run: |
@@ -97,7 +97,7 @@ jobs:
         tflint_init: true
         tflint_version: v0.52.0
         tflint_config: .tflint.hcl
-      continue-on-error: true
+      #continue-on-error: true
 
     - name: Check Tflint Result
       run: |
@@ -115,7 +115,7 @@ jobs:
       id: validate
       working-directory: env/${{ matrix.environment }}
       run: terraform validate
-      continue-on-error: true
+      #continue-on-error: true
 
     - name: Check Validate Result
       run: |
