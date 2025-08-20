@@ -71,7 +71,7 @@ jobs:
       uses: reviewdog/action-tflint@master
       with:
         github_token: ${{ secrets.github_token }}
-        level: "warning,error"
+        level: "error"
         reporter: github-pr-review
         fail_level: "none"
         filter_mode: "nofilter"
@@ -82,6 +82,7 @@ jobs:
         working_directory: env/dev
         tflint_target_dir: .
         tflint_config: .tflint.hcl
+        fail_on_error: true
 
     - name: Terraform Init
       working-directory: env/${{ matrix.environment }}
