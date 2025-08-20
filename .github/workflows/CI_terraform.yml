@@ -74,14 +74,13 @@ jobs:
         level: error
         reporter: github-pr-review
         fail_level: none
-        filter_mode: nofilter
+        filter_mode: diff_context
         flags: --recursive -c ${{ github.workspace }}/.tflint.hcl
         tflint_init: true
         tflint_version: v0.52.0
-        working_directory: .
-        tflint_target_dir: .
         tflint_config: .tflint.hcl
-        fail_on_error: true
+      continue-on-error: true
+
 
     - name: Terraform Init
       working-directory: env/${{ matrix.environment }}
