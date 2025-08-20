@@ -54,6 +54,17 @@ jobs:
       working-directory: env/${{ github.event.inputs.environment }} # 環境ごとにinitが必要で、その環境のモジュールを作成するディレクトリで実行する #トリガー条件で選択した環境がこちらに入る
       run: terraform init
 
+    - name: Select Terraform Workspace # 適用環境の選択
+      working-directory: env/${{ matrix.environment }} # AWSへのapply環境のディレクトリを指定
+      run: |
+        if terraform workspace list | grep -qw "${{ github.event.inputs.environment }}"; then
+          echo "Workspace ${{ github.event.inputs.environment }} exists. Selecting it."
+          terraform workspace select "${{ github.event.inputs.environment }}"
+        else
+          echo "Workspace ${{ github.event.inputs.environment }} does not exist. Creating it."
+          terraform workspace new "${{ github.event.inputs.environment }}"
+        fi
+
     - name: Terraform plan # AWS環境へ作成・変更・削除するリソースの内容を適用前に確認する。差分シミュレーションを行う。
       working-directory: env/${{ github.event.inputs.environment }} # 環境ごとにinitが必要で、その環境のモジュールを作成するディレクトリで実行する #トリガー条件で選択した環境がこちらに入る
       run: terraform plan
