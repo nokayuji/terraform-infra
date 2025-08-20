@@ -7,6 +7,8 @@ on:
 jobs:
   CI_terraform:
     runs-on: [self-hosted, Linux, X64]
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       matrix:
         environment: [dev] # 現状1環境のみ 
