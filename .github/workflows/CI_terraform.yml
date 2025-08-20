@@ -75,7 +75,7 @@ jobs:
         reporter: github-pr-review
         fail_level: none
         filter_mode: nofilter
-        flags: --recursive -c $(pwd)/.tflint.hcl
+        flags: --recursive -c ${{ github.workspace }}/.tflint.hcl
         tflint_init: true
         tflint_version: v0.52.0
         working_directory: .
