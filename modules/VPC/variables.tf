@@ -51,3 +51,8 @@ variable "sys" {
 variable "env" {
   type = string
 }
+
+variable "size" {
+  type    = number
+  default = 30
+}
