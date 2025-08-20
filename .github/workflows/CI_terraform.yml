@@ -57,6 +57,9 @@ jobs:
     #   uses: terraform-linters/setup-tflint@v4
     #   with:
     #     tflint_version: v0.52.0
+  
+    - name: Set up reviewdog
+      uses: reviewdog/action-setup@master
 
     - name: Setup tfcmt
       id: fmt
@@ -68,15 +71,13 @@ jobs:
       run: terraform fmt -check -recursive | reviewdog -f=golangci-lint -name="terraform fmt" -reporter=github-pr-review -level=error
       continue-on-error: true
 
-    - name: Check 1
-      if: steps.fmt.outputs.has_error == 'true'
+    - name: Check Format Result
       run: |
-        echo "失敗しました"
-
-    - name: Check 2
-      if: steps.fmt.outputs.has_error == 'false'
-      run: |
-        echo "成功しました"
+        if [ "${{ steps.fmt.conclusion }}" == "success" ]; then
+          echo "前のステップは成功しました"
+        else
+          echo "前のステップは失敗しました"
+        fi
 
     # - name: Init TFLint
     #   run: tflint --init
@@ -111,15 +112,13 @@ jobs:
       run: terraform validate
       continue-on-error: true
 
-    - name: Check 1
-      if: steps.validate.outputs.has_error == 'true'
+    - name: Check Validate Result
       run: |
-        echo "失敗しました"
-
-    - name: Check 2
-      if: steps.validate.outputs.has_error == 'false'
-      run: |
-        echo "成功しました"
+        if [ "${{ steps.validate.conclusion }}" == "success" ]; then
+          echo "前のステップは成功しました"
+        else
+          echo "前のステップは失敗しました"
+        fi
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
