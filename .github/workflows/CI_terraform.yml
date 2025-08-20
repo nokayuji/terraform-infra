@@ -80,6 +80,7 @@ jobs:
         tflint_init: true
         tflint_version: "v0.52.0"
         tflint_target_dir: env/dev
+        tflint_config: env/dev/.tflint.hcl
 
     - name: Terraform Init
       working-directory: env/${{ matrix.environment }}
