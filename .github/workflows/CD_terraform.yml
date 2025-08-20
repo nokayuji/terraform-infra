@@ -28,10 +28,10 @@ jobs:
     - name: Checkout Repo # GithubのTerraform構築しているリポジトリをクローンしてチェックアウトする
       uses: actions/checkout@v4
 
-    # - name: Setup node # CI静的解析ツールの中で、JavaScripベースで実行されるものがあるのでNode.jsをインストールする必要がある
-    #   uses: actions/setup-node@v4
-    #   with:
-    #     node-version: '20'
+    - name: Setup node # CI静的解析ツールの中で、JavaScripベースで実行されるものがあるのでNode.jsをインストールする必要がある
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
 
     - name: Configure AWS Credentials (AssumeRole) # OIDC認証を行なってterraform assume roleし、一時的な認証を得る
       uses: aws-actions/configure-aws-credentials@v4
