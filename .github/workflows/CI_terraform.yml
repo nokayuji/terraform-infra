@@ -57,9 +57,6 @@ jobs:
     #   uses: terraform-linters/setup-tflint@v4
     #   with:
     #     tflint_version: v0.52.0
-  
-    - name: Set up reviewdog
-      uses: reviewdog/action-setup@master
 
     - name: Setup tfcmt
       uses: shmokmt/actions-setup-tfcmt@v2
@@ -68,17 +65,15 @@ jobs:
 
     - name: Terraform Format Check
       id: fmt
-      run: terraform fmt -check -recursive | reviewdog -f=text -name="terraform fmt" -reporter=github-pr-review
+      run: terraform fmt -check -recursive
       continue-on-error: true
-      env:
-        REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Check Format Result
       run: |
         if [ "${{ steps.fmt.conclusion }}" == "success" ]; then
-          echo -e "\033[32mTerraform fmtの実行が成功しました\033[0m"
+          echo -e "\033[32mTerraform fmt Succeeded\033[0m"
         else
-          echo -e "\033[31mTerraform fmtの実行が失敗しました\033[0m"
+          echo -e "\033[31mTerraform fmt Failed\033[0m"
         fi
 
     # - name: Init TFLint
@@ -107,9 +102,9 @@ jobs:
     - name: Check Tflint Result
       run: |
         if [ "${{ steps.tflint.conclusion }}" == "success" ]; then
-          echo -e "\033[32mtflintの実行が成功しました\033[0m"
+          echo -e "\033[32mtflint Succeeded\033[0m"
         else
-          echo -e "\033[31mtflintの実行が失敗しました\033[0m"
+          echo -e "\033[31mtflint Failed\033[0m"
         fi
 
     - name: Terraform Init
@@ -125,9 +120,9 @@ jobs:
     - name: Check Validate Result
       run: |
         if [ "${{ steps.validate.conclusion }}" == "success" ]; then
-          echo -e "\033[32mTerraform Validateの実行が成功しました\033[0m"
+          echo -e "\033[32mTerraform validate Succeeded\033[0m"
         else
-          echo -e "\033[31mTerraform Validateの実行が失敗しました\033[0m"
+          echo -e "\033[31mTerraform validate Failed\033[0m"
         fi
 
     - name: Run Trivy vulnerability scanner
@@ -143,9 +138,9 @@ jobs:
     - name: Check Trivy Result
       run: |
         if [ "${{ steps.trivy.conclusion }}" == "success" ]; then
-          echo -e "\033[32mtrivyスキャンの実行に成功しました\033[0m"
+          echo -e "\033[32mtrivy scan Succeeded\033[0m"
         else
-          echo -e "\033[31mtrivyスキャンの実行に失敗しました\033[0m"
+          echo -e "\033[31mtrivy scan Failed\033[0m"
         fi
 
     - name: Format Trivy Scan Result
