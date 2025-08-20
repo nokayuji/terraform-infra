@@ -56,3 +56,8 @@ variable "size" {
   type    = number
   default = 30
 }
+
+variable "enc" {
+  type    = bool
+  default = false
+}
