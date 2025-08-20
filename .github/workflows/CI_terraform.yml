@@ -71,15 +71,14 @@ jobs:
       uses: reviewdog/action-tflint@master
       with:
         github_token: ${{ secrets.github_token }}
-        level: "error"
+        level: error
         reporter: github-pr-review
-        fail_level: "none"
-        filter_mode: "nofilter"
-        #flags: "--recursive"
-        #working_directory: .
+        fail_level: none
+        filter_mode: nofilter
+        flags: --recursive
         tflint_init: true
-        tflint_version: "v0.52.0"
-        working_directory: env/dev
+        tflint_version: v0.52.0
+        working_directory: .
         tflint_target_dir: .
         tflint_config: .tflint.hcl
         fail_on_error: true
