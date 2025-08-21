@@ -1,57 +1,74 @@
-name: Terraform CD
+# ワークフローの名称
+name: Terraform CD #CDワークフローを実行する
 
+### 「Events」ワークフローを起動するトリガー ###
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Github Actionsの画面から手動操作を行うことでトリガーとする
     inputs:
       environment:
         description: 'Choose environment to deploy'
         required: true
-        default: 'dev'
+        default: 'dev' # 現在はdev環境のみ。環境が増えたらオプションを追加して複数環境の中から選択できる
 
+### 「Jobs」ワークフロー内の処理のまとまり ###
 jobs:
   CD_terraform:
-    runs-on: [self-hosted, Linux, X64]
-    timeout-minutes: 60
-    environment: ${{ github.event.inputs.environment }}
+    runs-on: [self-hosted, Linux, X64] # ec2セルフホストランナーを指定。ラベルを網羅して指定して特定する。
+    timeout-minutes: 60 # このワークフローのタイムアウト分数
+    environment: ${{ github.event.inputs.environment }} # GithubのEnvironmentsで設定した環境(1人以上の承認)が必要 #トリガー条件で選択した環境がこちらに入る 
     permissions:
-      # workload identity連携によるToken発行には以下権限が必要
+      # OIDC連携による権限が必要。
       id-token: write
       contents: read
 
+    ### 「Steps」ジョブ内の個々の処理単位 ###
     steps:
-    - name: Checkout repository
+    
+      ### 「Actions」特定のタスクを実行するために作られた、独立したスクリプトやプログラム###
+    - name: Checkout Repo # GithubのTerraform構築しているリポジトリをクローンしてチェックアウトする
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
+    - name: Setup node # CI静的解析ツールの中で、JavaScripベースで実行されるものがあるのでNode.jsをインストールする必要がある
       uses: actions/setup-node@v4
       with:
         node-version: '20'
 
-    - name: Configure AWS credentials (AssumeRole)
+    - name: Configure AWS Credentials (AssumeRole) # OIDC認証を行なってterraform assume roleし、一時的な認証を得る
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::392329150290:role/terraform-assume-role
         aws-region: ap-northeast-1
         role-duration-seconds: 3600
 
-    - name: Verify AWS authentication
+    - name: Verify AWS Authentication # aws sts get-caller-identityを実行し認証を得られていることを確認する 
       run: |
-        echo "Checking AWS credentials..."
+        echo -e "\033[32mChecking AWS credentials...\033[0m"
         aws sts get-caller-identity
 
-    - name: Setup Terraform
+    - name: Setup Terraform # Terraformコマンドを実行するために必要
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: 1.5.7
 
-    - name: Terraform init
-      working-directory: ./env/${{ github.event.inputs.environment }}
+    - name: Terraform Init # tfコードの初期化(validate,planするのに必須)
+      working-directory: env/${{ github.event.inputs.environment }} # 環境ごとにinitが必要で、その環境のモジュールを作成するディレクトリで実行する #トリガー条件で選択した環境がこちらに入る
       run: terraform init
 
-    - name: Terraform plan
-      working-directory: ./env/${{ github.event.inputs.environment }}
+    - name: Select Terraform Workspace # 適用環境の選択
+      working-directory: env/${{ matrix.environment }} # AWSへのapply環境のディレクトリを指定
+      run: |
+        if terraform workspace list | grep -qw "${{ github.event.inputs.environment }}"; then
+          echo "Workspace ${{ github.event.inputs.environment }} exists. Selecting it."
+          terraform workspace select "${{ github.event.inputs.environment }}"
+        else
+          echo "Workspace ${{ github.event.inputs.environment }} does not exist. Creating it."
+          terraform workspace new "${{ github.event.inputs.environment }}"
+        fi
+
+    - name: Terraform plan # AWS環境へ作成・変更・削除するリソースの内容を適用前に確認する。差分シミュレーションを行う。
+      working-directory: env/${{ github.event.inputs.environment }} # 環境ごとにinitが必要で、その環境のモジュールを作成するディレクトリで実行する #トリガー条件で選択した環境がこちらに入る
       run: terraform plan
   
-    - name: Terraform Apply
-      working-directory: ./env/${{ github.event.inputs.environment }}
-      run: terraform apply -auto-approve
+    - name: Terraform Apply # 実際にAWS環境へインフラリソースを作成・変更・削除するコマンド
+      working-directory: env/${{ github.event.inputs.environment }} #トリガー条件で選択した環境がこちらに入る
+      run: terraform apply -auto-approve # -auto-approve をつけなければ対話形式で確認を促されるので自動承認してあげる
