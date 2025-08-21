@@ -1,24 +1,34 @@
-name: Terraform CI
+# ワークフローの名称
+name: Terraform CI #CIワークフローを実行する
 
+### 「Events」ワークフローを起動するトリガー ###
 on:
-  push:
+  pull_request:
+    types: [opend, synchronize] # PR作成時、同期時
     branches:
-      - main
-      - 'feature/*'
+      - main # ターゲットブランチ先を指定
 
+### 「Jobs」ワークフロー内の処理のまとまり ###
 jobs:
   CI_terraform:
-    runs-on: [self-hosted, Linux, X64]
+    runs-on: [self-hosted, Linux, X64] # ec2セルフホストランナーを指定。ラベルを網羅して指定して特定する。
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       matrix:
-        environment: [dev] # 現状1環境のみ 
-    timeout-minutes: 60
+        environment: [dev] # 現状1環境のみ 。並列で流すことができる。
+    timeout-minutes: 60 # このワークフローのタイムアウト分数
     permissions:
-      # workload identity連携によるToken発行には以下権限が必要
+      # OIDC連携による権限とGithub PRへのコメント、ラベル付与に権限が必要。
       id-token: write
       contents: read
+      pull-requests: write
+      issues: write 
 
+    ### 「Steps」ジョブ内の個々の処理単位 ###
     steps:
+
+      ### 「Actions」特定のタスクを実行するために作られた、独立したスクリプトやプログラム###
     - name: Check Runner User
       run: |
         echo "Current user:"
@@ -26,67 +36,152 @@ jobs:
         echo "HOME directory:"
         echo $HOME
 
-    - name: Checkout Repo
+    - name: Checkout Repo # GithubのTerraform構築しているリポジトリをクローンしてチェックアウトする
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
+    - name: Setup node # CI静的解析ツールの中で、JavaScripベースで実行されるものがあるのでNode.jsをインストールする必要がある
       uses: actions/setup-node@v4
       with:
         node-version: '20'
 
-    - name: Configure AWS Credentials (AssumeRole)
+    - name: Configure AWS Credentials (AssumeRole) # OIDC認証を行なってterraform assume roleし、一時的な認証を得る
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::392329150290:role/terraform-assume-role
         aws-region: ap-northeast-1
         role-duration-seconds: 3600
 
-    - name: Verify AWS Authentication
+    - name: Verify AWS Authentication # aws sts get-caller-identityを実行し認証を得られていることを確認する 
       run: |
-        echo "Checking AWS credentials..."
+        echo -e "\033[32mChecking AWS credentials...\033[0m"
         aws sts get-caller-identity
 
-    - name: Setup Terraform
+    - name: Setup Terraform # Terraformコマンドを実行するために必要
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: 1.5.7
 
-    - name: Setup TFLint
-      uses: terraform-linters/setup-tflint@v4
+    # - name: Setup TFLint #静的解析ツールであるTFlintのセットアップを行う
+    #   uses: terraform-linters/setup-tflint@v4
+    #   with:
+    #     tflint_version: v0.52.0
+
+    - name: Setup tfcmt # Terraform planの結果をGithub PRに出力するために必要となる
+      uses: shmokmt/actions-setup-tfcmt@v2
       with:
-        tflint_version: v0.52.0
+        version: v4.6.0
 
-    - name: Terraform Format Check
+    - name: Terraform Format Check # Terraformコマンドに備え付けられた自動整形ツール
+      id: fmt
       run: terraform fmt -check -recursive
-      continue-on-error: true
+      continue-on-error: true #エラー時でも以降のワークフローを実行
+      # terraform fmtはリポジトリのルートから -recursive をつけて実行することでその配下の全てのディレクトリまで自動整形を行なってくれる
+      # -recursive をつけなければカレントディレクトリのみしか参照されない
+      # -check オプションをつけることでエラー検知して自動整形せずに終了する
+      # -check オプションをつけなければワークフロー中に自動整形・自動修正される
 
-    - name: Init TFLint
-      run: tflint --init
-      continue-on-error: true
+    - name: Check Format Result # Format結果が通ったかそうでないかをechoで明記する
+      if: ${{ always() && (steps.fmt.conclusion == 'success' || steps.fmt.conclusion == 'failure') }} # if: always()をつけていないと、fmtのActionsが失敗した時にこちらのActionsが実行されない。
+      run: |
+        if [ "${{ steps.fmt.conclusion }}" == "success" ]; then
+          echo -e "\033[32mTerraform fmt Succeeded!\033[0m"
+        else
+          echo -e "\033[31mTerraform fmt Failed\033[0m"
+        fi
 
-    - name: Run TFLint
-      run: tflint --recursive
-      continue-on-error: true
+    # - name: Init TFLint # TFlintで使うプラグインの初期化を行う
+    #   run: tflint --init # リポジトリ配下の.tflint.hclを参照する(Githubではデフォルトでルートリポジトリが指定されている)
+    #   continue-on-error: true #エラー時でも以降のワークフローを実行
 
-    - name: Terraform Init
-      working-directory: env/${{ matrix.environment }}
-      run: terraform init
+    # - name: Run TFLint # 静的解析ツールであるtflintを実行する
+    #   run: tflint --recursive
+    #   continue-on-error: true
 
-    - name: Terraform Validation
-      working-directory: env/${{ matrix.environment }}
-      run: terraform validate
-      continue-on-error: true
+    - name: Run TFLint # 静的解析ツールであるtflintを実行する
+      id: tflint
+      uses: reviewdog/action-tflint@master
+      with:
+        github_token: ${{ secrets.github_token }}
+        level: info,warning,error # lint検知レベル
+        reporter: github-pr-review # PRにコメントを残す
+        fail_level: none
+        filter_mode: diff_context #リポジトリ内の全てをチェックはせず、PRの変更分のみに限定して検知
+        flags: --recursive -c ${{ github.workspace }}/.tflint.hcl # --recursiveで再起的にtfファイルをのぞく。
+        tflint_init: true # 設定ファイル内で追加ルールや除外ルールを更新している可能性があるため念の為毎回init
+        tflint_version: v0.52.0
+        tflint_config: .tflint.hcl
+      continue-on-error: true #エラー時でも以降のワークフローを実行
+      # reviewdog/action-tflint を用いることで、自前でtflintするより問題の修正箇所がわかりやすかったり、また、PRにコメントをしてくれる。
+      # flagsではlint実行時のオプションを引き渡すことができるが、設定ファイルを全てのディレクトリで用意してあげる必要のないよう設定ファイルを指定
 
-    - name: Run Trivy vulnerability scanner
+    - name: Check Tflint Result # Lint結果が通ったかそうでないかをechoで明記する
+      if: ${{ always() && (steps.tflint.conclusion == 'success' || steps.tflint.conclusion == 'failure') }}
+      run: |
+        if [ "${{ steps.tflint.conclusion }}" == "success" ]; then
+          echo -e "\033[32mtflint Succeeded!\033[0m"
+        else
+          echo -e "\033[31mtflint Failed\033[0m"
+        fi
+
+    - name: Run Trivy Scan #tfコードの脆弱性スキャンを実施する
+      id: trivy
       uses: aquasecurity/trivy-action@master
       with:
         scan-type: config
-        scan-ref: .
-        format: table
-        severity: CRITICAL,HIGH
+        hide-progress: true
+        severity: CRITICAL,HIGH # 脆弱性レベルがCRITICAL,HIGHのものに限定して検知
+        scan-ref: . # ルートリポジトリ配下の全てのtfファイルが対象
+        output: trivy-scan-result.txt # 左記のtxtファイルに結果を出力する(以下のActionsで使用するため)
+      # aquasecurity/trivy-actionを用いて、trivy脆弱性スキャンを行う
+      # 同じようなツールにtfsecがあるが、tfsec側がTrivyを推奨しており、tfsecよりもTerraformの最新機能に追従できているためこちらを採用。
 
-    - name: Select Terraform Workspace
-      working-directory: env/${{ matrix.environment }}
+    - name: Check Trivy Result # Trivyのスキャン結果が通ったかそうでないかをechoで明記する
+      if: ${{ always() && (steps.trivy.conclusion == 'success' || steps.trivy.conclusion == 'failure') }}
+      run: |
+        if [ "${{ steps.trivy.conclusion }}" == "success" ]; then
+          echo -e "\033[32mtrivy scan Succeeded!\033[0m"
+        else
+          echo -e "\033[31mtrivy scan Failed\033[0m"
+        fi
+
+    - name: Format Trivy Scan Result # 脆弱性スキャンの結果txtファイルを元にフォーマットセットする
+      run: |
+        if [ -s trivy-scan-result.txt ]; then
+          echo -e "## Vulnerability Scan Results\n<details><summary>Detail</summary>\n\n\`\`\`\n$(cat trivy-scan-result.txt)\n\`\`\`\n</details>" > formatted-trivy-result.md
+        else
+          echo -e "## Vulnerability Scan Results\nNo vulnerabilities detected" > formatted-trivy-result.md
+        fi
+      # -s trivy-scan-result.txt のサイズが少しでもある(ファイルの内容がある)場合、スキャン結果・詳細をコメントする
+      # ファイルの内容が空の場合、スキャン結果が検知されなかったとコメント
+
+    - name: Comment PR With Trivy Scan Results # GITHUB_TOKENを参照してPRを割り出し、Format Trivy Scan Resultで生成したmdファイルの内容をコメントする
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        GITHUB_TOKEN: ${{ secrets.github_token }}
+        path: formatted-trivy-result.md
+
+    - name: Terraform Init # tfコードの初期化(validate,planするのに必須)
+      working-directory: env/${{ matrix.environment }} # 環境ごとにinitが必要で、その環境のモジュールを作成するディレクトリで実行する
+      run: terraform init
+
+    - name: Terraform Validation # Terraformコマンドに備え付けられている構文チェッカー
+      id: validate
+      working-directory: env/${{ matrix.environment }} # 親モジュールのあるディレクトリで実施することで、子モジュールのtfファイルも読み込まれる(全てのtfファイルで構文チェックできる)
+      run: terraform validate
+      continue-on-error: true #エラー時でも以降のワークフローを実行
+
+    - name: Check Validate Result # Validate結果が通ったかそうでないかをechoで明記する
+      if: ${{ always() && (steps.validate.conclusion == 'success' || steps.validate.conclusion == 'failure') }}
+      run: |
+        if [ "${{ steps.validate.conclusion }}" == "success" ]; then
+          echo -e "\033[32mTerraform validate Succeeded!\033[0m"
+        else
+          echo -e "\033[31mTerraform validate Failed\033[0m"
+        fi
+
+    - name: Select Terraform Workspace # 適用環境の選択
+      working-directory: env/${{ matrix.environment }} # AWSへのapply環境のディレクトリを指定
       run: |
         if terraform workspace list | grep -qw "${{ matrix.environment }}"; then
           echo "Workspace ${{ matrix.environment }} exists. Selecting it."
@@ -96,6 +191,6 @@ jobs:
           terraform workspace new "${{ matrix.environment }}"
         fi
 
-    - name: Terraform Plan
-      working-directory: env/${{ matrix.environment }}
-      run: terraform plan
+    - name: Terraform Plan # AWS環境へ作成・変更・削除するリソースの内容を適用前に確認する。差分シミュレーションを行う。
+      working-directory: env/${{ matrix.environment }} # 環境ごとにinitが必要で、その環境のモジュールを作成するディレクトリで実行する
+      run: tfcmt plan -patch -- terraform plan -input=false # tfcmtを用いて結果をGithubのPRへうまく整形・出力を行う
