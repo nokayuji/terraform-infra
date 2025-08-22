@@ -29,7 +29,8 @@ variable "runner_ec2_create_flag" {
 }
 
 variable "public_subnet_ids" {
-  type = string
+  type        = string
+  description = "subnet ID"
 }
 
 variable "my_cidr" {
