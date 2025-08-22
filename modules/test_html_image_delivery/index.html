@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S3ギャラリー</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background: #f9fafb;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        header p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+        }
+
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 40px 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 300px;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .card .content {
+            padding: 20px;
+            text-align: left;
+        }
+
+        .card .content h2 {
+            margin: 0 0 10px;
+            font-size: 1.4em;
+            color: #4a90e2;
+        }
+
+        .card .content p {
+            margin: 0;
+            font-size: 1em;
+            color: #555;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            background: #eaeaea;
+            color: #555;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My S3 Image Gallery(SUSHI)</h1>
+        <p>ここにアップロードした画像と説明が表示されます</p>
+    </header>
+
+    <main>
+        <div class="card">
+            <img src="https://nyj-dev01-image-bucket.s3.amazonaws.com/image01.jpeg" alt="サンプル画像">
+            <div class="content">
+                <h2>炙りトロサーモン</h2>
+                <p>これは僕がお寿司で一番好きな炙りトロサーモンです。</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://nyj-dev01-image-bucket.s3.amazonaws.com/image02.jpeg" alt="サンプル画像2">
+            <div class="content">
+                <h2>中トロ</h2>
+                <p>これは僕がお寿司で二番目に好きな中トロです。</p>
+            </div>
+        </div>
+
+        <!-- 追加の画像カードはここに同じ形式でコピー -->
+    </main>
+
+    <footer>
+        &copy; 2025 Your Company Name. All Rights Reserved.
+    </footer>
+</body>
+</html>

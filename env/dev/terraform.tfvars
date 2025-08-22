@@ -27,3 +27,5 @@ env = "dev01"
 #   private = "terraform-infra-private-*"
 # }
 
+terraform_ec2_instance_type = "t1.micro"
+terraform_ec2_volume_size = 16

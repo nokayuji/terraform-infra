@@ -83,3 +83,11 @@ variable "vpc_id" {
 # variable "instance_type" {
 #   type = map(string)
 # }
+
+variable "terraform_ec2_instance_type" {
+  type = string
+}
+
+variable "terraform_ec2_volume_size" {
+  type = string
+}
