@@ -74,7 +74,7 @@ jobs:
     - name: Terraform Format Check # Terraformコマンドに備え付けられた自動整形ツール
       id: fmt
       run: terraform fmt -check -recursive
-      continue-on-error: true #エラー時でも以降のワークフローを実行
+      # continue-on-error: true #エラー時でも以降のワークフローを実行
       # terraform fmtはリポジトリのルートから -recursive をつけて実行することでその配下の全てのディレクトリまで自動整形を行なってくれる
       # -recursive をつけなければカレントディレクトリのみしか参照されない
       # -check オプションをつけることでエラー検知して自動整形せずに終了する
@@ -110,7 +110,7 @@ jobs:
         tflint_init: true # 設定ファイル内で追加ルールや除外ルールを更新している可能性があるため念の為毎回init
         tflint_version: v0.52.0
         tflint_config: .tflint.hcl
-      continue-on-error: true #エラー時でも以降のワークフローを実行
+      # continue-on-error: true #エラー時でも以降のワークフローを実行
       # reviewdog/action-tflint を用いることで、自前でtflintするより問題の修正箇所がわかりやすかったり、また、PRにコメントをしてくれる。
       # flagsではlint実行時のオプションを引き渡すことができるが、設定ファイルを全てのディレクトリで用意してあげる必要のないよう設定ファイルを指定
 
@@ -169,7 +169,7 @@ jobs:
       id: validate
       working-directory: env/${{ matrix.environment }} # 親モジュールのあるディレクトリで実施することで、子モジュールのtfファイルも読み込まれる(全てのtfファイルで構文チェックできる)
       run: terraform validate
-      continue-on-error: true #エラー時でも以降のワークフローを実行
+      # continue-on-error: true #エラー時でも以降のワークフローを実行
 
     - name: Check Validate Result # Validate結果が通ったかそうでないかをechoで明記する
       if: ${{ always() && (steps.validate.conclusion == 'success' || steps.validate.conclusion == 'failure') }}
