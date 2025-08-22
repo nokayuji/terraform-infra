@@ -32,3 +32,8 @@ variable "my_cidr" {
   type        = string
   description = "my IP"
 }
+
+variable "public_subnet_ids" {
+  type        = string
+  description = "subnet ID"
+}
