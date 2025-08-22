@@ -69,6 +69,14 @@ jobs:
       working-directory: env/${{ github.event.inputs.environment }} # 環境ごとにinitが必要で、その環境のモジュールを作成するディレクトリで実行する #トリガー条件で選択した環境がこちらに入る
       run: terraform plan
   
+    - name: Wait For 30 Seconds
+      run: |
+        sleep 10
+        echo -e "\033[31m...Wait a minute...\033[0m"
+        sleep 10
+        echo -e "\033[31m...checking...\033[0m"
+        sleep 10
+
     - name: Terraform Apply # 実際にAWS環境へインフラリソースを作成・変更・削除するコマンド
       working-directory: env/${{ github.event.inputs.environment }} #トリガー条件で選択した環境がこちらに入る
       run: terraform apply -auto-approve # -auto-approve をつけなければ対話形式で確認を促されるので自動承認してあげる
