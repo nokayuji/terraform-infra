@@ -1,3 +1,6 @@
 .DS_store
 env/dev/.key_pair
 env/dev/.terraform
+modules/self_hosted_runner/userdata.sh
+env/dev/nyj-dev01-ec2.pem
+env/dev/nyj-dev01-runner-ec2.pem

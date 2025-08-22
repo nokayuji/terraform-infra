@@ -83,3 +83,15 @@ variable "vpc_id" {
 # variable "instance_type" {
 #   type = map(string)
 # }
+
+variable "runner_ec2_instance_type" {
+  type = string
+}
+
+variable "runner_ec2_volume_size" {
+  type = string
+}
+
+variable "runner_ec2_create_flag" {
+  type = bool
+}
