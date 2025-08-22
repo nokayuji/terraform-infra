@@ -104,7 +104,7 @@ jobs:
         github_token: ${{ secrets.github_token }}
         level: info,warning,error # lint検知レベル
         reporter: github-pr-review # PRにコメントを残す
-        fail_level: info,warning,error
+        fail_level: info
         filter_mode: diff_context #リポジトリ内の全てをチェックはせず、PRの変更分のみに限定して検知
         flags: --recursive -c ${{ github.workspace }}/.tflint.hcl # --recursiveで再起的にtfファイルをのぞく。
         tflint_init: true # 設定ファイル内で追加ルールや除外ルールを更新している可能性があるため念の為毎回init
