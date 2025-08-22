@@ -98,3 +98,15 @@ variable "ec2_create_flag" {
   type        = bool
   description = "Whether to create an EC2 instance"
 }
+
+variable "runner_ec2_instance_type" {
+  type = string
+}
+
+variable "runner_ec2_volume_size" {
+  type = string
+}
+
+variable "runner_ec2_create_flag" {
+  type = bool
+}
