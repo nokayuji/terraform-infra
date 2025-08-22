@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "image_delivery" {
-  bucket = "${var.sys}-${var.env}-image-bucket"
+
 }
 
 resource "aws_s3_bucket_ownership_controls" "image_delivery" {

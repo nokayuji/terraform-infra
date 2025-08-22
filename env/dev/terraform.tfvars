@@ -27,7 +27,7 @@ env = "dev01"
 #   private = "terraform-infra-private-*"
 # }
 
-terraform_ec2_instance_type = "t3.micro" # t1.micro
+terraform_ec2_instance_type = "t1.micro"
 terraform_ec2_volume_size = 10
 
 ec2_create_flag = true
