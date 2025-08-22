@@ -85,13 +85,16 @@ variable "vpc_id" {
 # }
 
 variable "terraform_ec2_instance_type" {
-  type = string
+  type        = string
+  description = "Instance type for terraform EC2"
 }
 
 variable "terraform_ec2_volume_size" {
-  type = string
+  type        = string
+  description = "EBS volume size"
 }
 
 variable "ec2_create_flag" {
-  type = bool
+  type        = bool
+  description = "Whether to create an EC2 instance"
 }

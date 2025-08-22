@@ -1,7 +1,9 @@
 variable "sys" {
-  type = string
+  type        = string
+  description = "System name"
 }
 
 variable "env" {
-  type = string
+  type        = string
+  description = "Environment name"
 }
