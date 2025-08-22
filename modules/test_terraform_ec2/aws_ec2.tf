@@ -32,9 +32,9 @@ resource "aws_instance" "ec2" {
   root_block_device {
     volume_type = "gp3"
     volume_size = var.terraform_ec2_volume_size
-    encrypted = true
+    encrypted   = true
   }
-  
+
   metadata_options {
     http_tokens = "required"
   }
