@@ -2,7 +2,7 @@ resource "aws_instance" "self_host_ec2" {
   count = var.runner_ec2_create_flag ? 1 : 0
 
   ami                         = data.aws_ami.amazon_linux_2023.id
-  subnet_id = var.public_subnet_ids
+  subnet_id                   = var.public_subnet_ids
   instance_type               = var.runner_ec2_instance_type
   key_name                    = aws_key_pair.self_host_ec2.key_name
   associate_public_ip_address = true
@@ -21,7 +21,7 @@ resource "aws_instance" "self_host_ec2" {
   metadata_options {
     http_tokens = "required"
   }
-  
+
   tags = {
     Name = "self-hosted-runner"
   }
