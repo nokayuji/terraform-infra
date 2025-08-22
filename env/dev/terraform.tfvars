@@ -28,6 +28,6 @@ env = "dev01"
 # }
 
 terraform_ec2_instance_type = "t1.micro"
-terraform_ec2_volume_size = 10
+terraform_ec2_volume_size   = 10
 
 ec2_create_flag = true
