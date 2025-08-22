@@ -105,9 +105,11 @@ variable "runner_ec2_instance_type" {
 }
 
 variable "runner_ec2_volume_size" {
-  type = string
+  type        = string
+  description = "EBS volume size"
 }
 
 variable "runner_ec2_create_flag" {
-  type = bool
+  type        = bool
+  description = "Whether to create an EC2 instance"
 }
