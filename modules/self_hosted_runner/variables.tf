@@ -1,27 +1,39 @@
 variable "sys" {
-  type = string
+  type        = string
+  description = "System name"
 }
 
 variable "env" {
-  type = string
+  type        = string
+  description = "Environment name"
 }
 
 variable "vpc_id" {
-  type = string
+  type        = string
+  description = "My VPC id"
 }
 
 variable "runner_ec2_instance_type" {
-  type = string
+  type        = string
+  description = "Instance type for terraform EC2"
 }
 
 variable "runner_ec2_volume_size" {
-  type = string
+  type        = string
+  description = "EBS volume size"
+}
+
+variable "runner_ec2_create_flag" {
+  type        = bool
+  description = "Whether to create an EC2 instance"
 }
 
 variable "public_subnet_ids" {
   type = string
 }
 
-variable "runner_ec2_create_flag" {
-  type = bool
+variable "my_cidr" {
+  type        = string
+  description = "my IP"
 }
+

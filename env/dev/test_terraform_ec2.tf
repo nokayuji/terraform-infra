@@ -7,4 +7,5 @@ module "test_terraform_ec2" {
   terraform_ec2_instance_type = var.terraform_ec2_instance_type
   terraform_ec2_volume_size   = var.terraform_ec2_volume_size
   ec2_create_flag             = var.ec2_create_flag
+  my_cidr                     = var.my_cidr
 }

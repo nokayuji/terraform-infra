@@ -36,3 +36,5 @@ runner_ec2_instance_type = "t3.medium"
 runner_ec2_volume_size   = 16
 
 runner_ec2_create_flag = true
+
+my_cidr = "60.93.5.117/32"

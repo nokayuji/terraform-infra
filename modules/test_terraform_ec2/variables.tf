@@ -27,3 +27,8 @@ variable "ec2_create_flag" {
   type        = bool
   description = "Whether to create an EC2 instance"
 }
+
+variable "my_cidr" {
+  type        = string
+  description = "my IP"
+}

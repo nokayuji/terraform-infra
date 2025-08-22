@@ -6,7 +6,7 @@ resource "aws_security_group" "terraform_ec2_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["60.93.5.117/32"]
+    cidr_blocks = [var.my_cidr]
   }
 
   egress {
