@@ -38,7 +38,7 @@ resource "aws_s3_bucket_website_configuration" "image_delivery" {
   }
 }
 
-resource "aws_s3_bucket_object" "index_delivery" {
+resource "aws_s3_object" "index_delivery" {
   bucket       = aws_s3_bucket.image_delivery.id
   key          = "index.html"
   source       = "${path.module}/index.html"
@@ -47,7 +47,7 @@ resource "aws_s3_bucket_object" "index_delivery" {
   depends_on   = [aws_s3_bucket_ownership_controls.image_delivery]
 }
 
-resource "aws_s3_bucket_object" "image01_delivery" {
+resource "aws_s3_object" "image01_delivery" {
   bucket       = aws_s3_bucket.image_delivery.id
   key          = "image01.jpeg"
   source       = "${path.module}/image01.jpeg"
@@ -56,7 +56,7 @@ resource "aws_s3_bucket_object" "image01_delivery" {
   depends_on   = [aws_s3_bucket_ownership_controls.image_delivery]
 }
 
-resource "aws_s3_bucket_object" "image02_delivery" {
+resource "aws_s3_object" "image02_delivery" {
   bucket       = aws_s3_bucket.image_delivery.id
   key          = "image02.jpeg"
   source       = "${path.module}/image02.jpeg"
