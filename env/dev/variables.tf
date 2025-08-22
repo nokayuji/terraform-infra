@@ -91,3 +91,7 @@ variable "terraform_ec2_instance_type" {
 variable "terraform_ec2_volume_size" {
   type = string
 }
+
+variable "ec2_create_flag" {
+  type = bool
+}
