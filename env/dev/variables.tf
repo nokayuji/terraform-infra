@@ -100,7 +100,8 @@ variable "ec2_create_flag" {
 }
 
 variable "runner_ec2_instance_type" {
-  type = string
+  type        = string
+  description = "Instance type for runner EC2"
 }
 
 variable "runner_ec2_volume_size" {
