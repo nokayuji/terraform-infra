@@ -104,7 +104,7 @@ jobs:
         github_token: ${{ secrets.github_token }}
         level: info,warning,error # lint検知レベル
         reporter: github-pr-review # PRにコメントを残す
-        fail_level: none
+        fail_level: info
         filter_mode: diff_context #リポジトリ内の全てをチェックはせず、PRの変更分のみに限定して検知
         flags: --recursive -c ${{ github.workspace }}/.tflint.hcl # --recursiveで再起的にtfファイルをのぞく。
         tflint_init: true # 設定ファイル内で追加ルールや除外ルールを更新している可能性があるため念の為毎回init
@@ -132,6 +132,7 @@ jobs:
         severity: CRITICAL,HIGH # 脆弱性レベルがCRITICAL,HIGHのものに限定して検知
         scan-ref: . # ルートリポジトリ配下の全てのtfファイルが対象
         output: trivy-scan-result.txt # 左記のtxtファイルに結果を出力する(以下のActionsで使用するため)
+        exit-code: 1
       # aquasecurity/trivy-actionを用いて、trivy脆弱性スキャンを行う
       # 同じようなツールにtfsecがあるが、tfsec側がTrivyを推奨しており、tfsecよりもTerraformの最新機能に追従できているためこちらを採用。
 
@@ -145,6 +146,7 @@ jobs:
         fi
 
     - name: Format Trivy Scan Result # 脆弱性スキャンの結果txtファイルを元にフォーマットセットする
+      if: ${{ always() && (steps.trivy.conclusion == 'success' || steps.trivy.conclusion == 'failure') }}
       run: |
         if [ -s trivy-scan-result.txt ]; then
           echo -e "## Vulnerability Scan Results\n<details><summary>Detail</summary>\n\n\`\`\`\n$(cat trivy-scan-result.txt)\n\`\`\`\n</details>" > formatted-trivy-result.md
@@ -155,6 +157,7 @@ jobs:
       # ファイルの内容が空の場合、スキャン結果が検知されなかったとコメント
 
     - name: Comment PR With Trivy Scan Results # GITHUB_TOKENを参照してPRを割り出し、Format Trivy Scan Resultで生成したmdファイルの内容をコメントする
+      if: ${{ always() && (steps.trivy.conclusion == 'success' || steps.trivy.conclusion == 'failure') }}
       uses: marocchino/sticky-pull-request-comment@v2
       with:
         recreate: true
@@ -163,7 +166,7 @@ jobs:
 
     - name: Terraform Init # tfコードの初期化(validate,planするのに必須)
       working-directory: env/${{ matrix.environment }} # 環境ごとにinitが必要で、その環境のモジュールを作成するディレクトリで実行する
-      run: terraform init
+      run: terraform init -upgrade
 
     - name: Terraform Validation # Terraformコマンドに備え付けられている構文チェッカー
       id: validate
