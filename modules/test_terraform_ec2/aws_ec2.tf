@@ -1,12 +1,12 @@
 resource "aws_instance" "ec2" {
   count = var.ec2_create_flag ? 1 : 0
 
-  ami                         = "ami-0ca38c7440de1749aa"
-  instance_type               = var.terraform_ec2_instance_type
-  key_name                    = aws_key_pair.ec2.key_name
+  ami                          = "ami-0ca38c7440de1749aa"
+  instance_type                = var.terraform_ec2_instance_type
+  key_name                     = aws_key_pair.ec2.key_name
   associate_publicc_ip_address = true
-  iam_instance_profile        = aws_iam_instance_profile.terraform_ec2_profile.name
-  user_data                   = <<-EOF
+  iam_instance_profile         = aws_iam_instance_profile.terraform_ec2_profile.name
+  user_data                    = <<-EOF
     #!/bin/bash
     set -eux
 
