@@ -1,3 +1,4 @@
 .DS_store
 env/dev/.key_pair
 env/dev/.terraform
+env/dev/nyj-dev01-ec2.pem

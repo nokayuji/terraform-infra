@@ -1,13 +1,16 @@
 resource "aws_instance" "ec2" {
+  count = var.ec2_create_flag ? 1 : 0
+
   ami                         = data.aws_ami.amazon_linux_2023.id # ami = "ami-0ca38c7440de1749aa"
+  subnet_id = var.public_subnet_ids
   instance_type               = var.terraform_ec2_instance_type
-  disable_api_termination     = true
   key_name                    = aws_key_pair.ec2.key_name
   associate_public_ip_address = true
   iam_instance_profile        = aws_iam_instance_profile.terraform_ec2_profile.name
-  user_data                   = <<EOF
+  user_data                   = <<-EOF
     #!/bin/bash
     set -eux
+
     dnf -y update
     dnf install -y git
     git version
@@ -19,7 +22,7 @@ resource "aws_instance" "ec2" {
     sudo -u ec2-user /home/ec2-user/.tfenv/bin/tfenv use 1.5.7
     tfenv -v
     terraform -v
-    sudo -u ec2-user git clone https://github.com/Terraform-TEST0928/terraform-infra.git
+    sudo -u ec2-user git clone https://github.com/Terraform-TEST0928/terraform-infra.git /home/ec2-user/terraform-infra
     pwd
   EOF
 
@@ -45,11 +48,11 @@ resource "tls_private_key" "ec2" {
 
 resource "aws_key_pair" "ec2" {
   key_name   = "${var.sys}-${var.env}-ec2"
-  public_key = tls_private_key.ec2.private_key_openssh
+  public_key = tls_private_key.ec2.public_key_openssh
 }
 
 resource "local_file" "private_key" {
   content         = tls_private_key.ec2.private_key_pem
-  filename        = "${path.module}/${var.sys}-${var.env}-ec2-key.pem"
+  filename        = "${path.module}/../../env/dev/${var.sys}-${var.env}-ec2.pem"
   file_permission = "0400" #所有者のみ読み取り可能
 }
