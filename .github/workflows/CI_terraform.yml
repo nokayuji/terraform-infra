@@ -4,7 +4,7 @@ name: Terraform CI #CIワークフローを実行する
 ### 「Events」ワークフローを起動するトリガー ###
 on:
   pull_request:
-    types: [opend, synchronize] # PR作成時、同期時
+    types: [opened, synchronize] # PR作成時、同期時
     branches:
       - main # ターゲットブランチ先を指定
 
