@@ -166,7 +166,7 @@ jobs:
 
     - name: Terraform Init # tfコードの初期化(validate,planするのに必須)
       working-directory: env/${{ matrix.environment }} # 環境ごとにinitが必要で、その環境のモジュールを作成するディレクトリで実行する
-      run: terraform init
+      run: terraform init -upgrade
 
     - name: Terraform Validation # Terraformコマンドに備え付けられている構文チェッカー
       id: validate
