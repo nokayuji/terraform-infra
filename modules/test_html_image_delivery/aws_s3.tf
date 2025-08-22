@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "image_delivery" {
-  bucket_name = "${var.sys}-${var.env}-image-bucket"
+  bucket = "${var.sys}-${var.env}-image-bucket"
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "image_delivery" {
