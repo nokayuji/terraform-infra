@@ -55,7 +55,7 @@ jobs:
       run: terraform init -upgrade
 
     - name: Select Terraform Workspace # 適用環境の選択
-      working-directory: env/${{ github.event.inputs.environment }}" # AWSへのapply環境のディレクトリを指定
+      working-directory: env/${{ github.event.inputs.environment }} # AWSへのapply環境のディレクトリを指定
       run: |
         if terraform workspace list | grep -qw "${{ github.event.inputs.environment }}"; then
           echo "Workspace ${{ github.event.inputs.environment }} exists. Selecting it."
