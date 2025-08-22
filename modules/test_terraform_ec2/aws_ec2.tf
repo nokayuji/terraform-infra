@@ -1,7 +1,7 @@
 resource "aws_instance" "ec2" {
   count = var.ec2_create_flag ? 1 : 0
 
-  ami                         = "ami-0ca38c7440de1749aa"
+  ami                         = data.aws_ami.amazon_linux_2023.id
   instance_type               = var.terraform_ec2_instance_type
   key_name                    = aws_key_pair.ec2.key_name
   associate_public_ip_address = true
