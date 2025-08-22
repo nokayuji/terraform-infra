@@ -16,6 +16,7 @@ resource "aws_instance" "self_host_ec2" {
   root_block_device {
     volume_type = "gp3"
     volume_size = var.runner_ec2_volume_size
+    encrypted   = true
   }
 
   metadata_options {
