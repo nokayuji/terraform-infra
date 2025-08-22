@@ -7,6 +7,13 @@ on:
     types: [opened, synchronize] # PR作成時、同期時
     branches:
       - main # ターゲットブランチ先を指定
+      
+  workflow_dispatch: # Github Actionsの画面から手動操作を行うことでトリガーとする
+    inputs:
+      environment:
+        description: 'Choose environment to deploy'
+        required: true
+        default: 'dev' # 現在はdev環境のみ。環境が増えたらオプションを追加して複数環境の中から選択できる
 
 ### 「Jobs」ワークフロー内の処理のまとまり ###
 jobs:
