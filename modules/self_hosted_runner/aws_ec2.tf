@@ -43,8 +43,9 @@ resource "aws_key_pair" "self_host_ec2" {
   public_key = tls_private_key.self_host_ec2.public_key_openssh
 }
 
-resource "local_file" "self_host_ec2_key" {
-  content         = tls_private_key.self_host_ec2.private_key_pem
-  filename        = "${path.module}/../../env/dev/${var.sys}-${var.env}-runner-ec2.pem"
-  file_permission = "0400" #所有者のみ読み取り可能
-}
+### すでにpemファイルは存在するためコメントアウト
+# resource "local_file" "self_host_ec2_key" {
+#   content         = tls_private_key.self_host_ec2.private_key_pem
+#   filename        = "${path.module}/../../env/dev/${var.sys}-${var.env}-runner-ec2.pem"
+#   file_permission = "0400" #所有者のみ読み取り可能
+# }
