@@ -46,52 +46,37 @@ variable "vpc_id" {
   type = string
 }
 
-# variable "instance_type" {
-#   type = string
+# variable "terraform_ec2_instance_type" {
+#   type        = string
+#   description = "Instance type for terraform EC2"
 # }
 
-# #variable "associate_public_ip_address" {
-# #  type = string
-# #}
-
-# variable "disable_api_termination" {
-#   type = bool
+# variable "terraform_ec2_volume_size" {
+#   type        = string
+#   description = "EBS volume size"
 # }
 
-# variable "vpc_id" {
-#   type = string
-# }
-
-# variable "instance_type" {
-#   type = map(string)
-# }
-
-# variable "subnet_id" {
-#   type = map(string)
-# }
-
-# variable "sg_group" {
-#   type = map(list)
-# }
-
-# variable "ec2_instances" {
-#   type = map(object({
-#     instance_type = string
-#   }))
-# }
-
-# variable "instance_type" {
-#   type = map(string)
+# variable "ec2_create_flag" {
+#   type        = bool
+#   description = "Whether to create an EC2 instance"
 # }
 
 variable "runner_ec2_instance_type" {
-  type = string
+  type        = string
+  description = "Instance type for runner EC2"
 }
 
 variable "runner_ec2_volume_size" {
-  type = string
+  type        = string
+  description = "EBS volume size"
 }
 
 variable "runner_ec2_create_flag" {
-  type = bool
+  type        = bool
+  description = "Whether to create an EC2 instance"
+}
+
+variable "my_cidr" {
+  type        = string
+  description = "my IP"
 }

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S3ImageGallery</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background: #f9fafb;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        header p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+        }
+
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 40px 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 300px;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .card .content {
+            padding: 20px;
+            text-align: left;
+        }
+
+        .card .content h2 {
+            margin: 0 0 10px;
+            font-size: 1.4em;
+            color: #4a90e2;
+        }
+
+        .card .content p {
+            margin: 0;
+            font-size: 1em;
+            color: #555;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            background: #eaeaea;
+            color: #555;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Self-Introduction</h1>
+        <p>私の好きなものたちを紹介します</p>
+    </header>
+
+    <main>
+        <div class="card">
+            <img src="https://nyj-dev01-image-bucket.s3.amazonaws.com/image01.jpg" alt="サンプル画像">
+            <div class="content">
+                <h2>永岡勇志</h2>
+                <p>福岡で産まれ大阪で小学校を過ごし、香川で中高を過ごし、東京で大学を過ごして、福岡で就職しました。</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://nyj-dev01-image-bucket.s3.amazonaws.com/image02.jpg" alt="サンプル画像2">
+            <div class="content">
+                <h2>愛猫：ころん</h2>
+                <p>9月で3歳になります。猫は本当に見ていて飽きません！全人類飼いましょう。</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://nyj-dev01-image-bucket.s3.amazonaws.com/image03.jpg" alt="サンプル画像2">
+            <div class="content">
+                <h2>大好物のラーメン</h2>
+                <p>学生時代から今までラーメンだけはずっと食べてきました。香川にいた時も基本うどんよりラーメン食べてました。</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://nyj-dev01-image-bucket.s3.amazonaws.com/image04.jpg" alt="サンプル画像">
+            <div class="content">
+                <h2>7月に購入したマイカー</h2>
+                <p>ずっとレンタカードライバーでしたがようやく購入できました。購入してからほぼ毎日のように運転し、全く後悔しませんでした。</p>
+            </div>
+        </div>
+
+        <!-- 追加の画像カードはここに同じ形式でコピー -->
+    </main>
+
+    <section
+        style="padding: 20px; max-width: 800px; margin: 0 auto; font-size: 1.1em; color: #333; text-align: center; font-weight: 600;">
+        <p>
+            本日はここまで私の発表をご清聴いただき、ありがとうございました。
+        </p>
+    </section>
+
+    <footer>
+        &copy; 2025 Yuji Nagaoka. All Rights Reserved.
+    </footer>
+</body>
+
+</html>

@@ -8,4 +8,5 @@ module "self_hosted_runner" {
   runner_ec2_volume_size   = var.runner_ec2_volume_size
   public_subnet_ids        = module.network.public_subnet_ids
   runner_ec2_create_flag   = var.runner_ec2_create_flag
+  my_cidr                  = var.my_cidr
 }

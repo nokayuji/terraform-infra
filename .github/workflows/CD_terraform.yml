@@ -52,10 +52,10 @@ jobs:
 
     - name: Terraform Init # tfコードの初期化(validate,planするのに必須)
       working-directory: env/${{ github.event.inputs.environment }} # 環境ごとにinitが必要で、その環境のモジュールを作成するディレクトリで実行する #トリガー条件で選択した環境がこちらに入る
-      run: terraform init
+      run: terraform init -upgrade
 
     - name: Select Terraform Workspace # 適用環境の選択
-      working-directory: env/${{ matrix.environment }} # AWSへのapply環境のディレクトリを指定
+      working-directory: env/${{ github.event.inputs.environment }} # AWSへのapply環境のディレクトリを指定
       run: |
         if terraform workspace list | grep -qw "${{ github.event.inputs.environment }}"; then
           echo "Workspace ${{ github.event.inputs.environment }} exists. Selecting it."
@@ -69,6 +69,15 @@ jobs:
       working-directory: env/${{ github.event.inputs.environment }} # 環境ごとにinitが必要で、その環境のモジュールを作成するディレクトリで実行する #トリガー条件で選択した環境がこちらに入る
       run: terraform plan
   
+    - name: Wait For 30 Seconds
+      run: |
+        sleep 10
+        echo -e "\033[31m...Wait a minute...\033[0m"
+        sleep 10
+        echo -e "\033[31m...checking...\033[0m"
+        sleep 10
+        echo -e "\033[32mOK!!!\033[0m"
+
     - name: Terraform Apply # 実際にAWS環境へインフラリソースを作成・変更・削除するコマンド
       working-directory: env/${{ github.event.inputs.environment }} #トリガー条件で選択した環境がこちらに入る
       run: terraform apply -auto-approve # -auto-approve をつけなければ対話形式で確認を促されるので自動承認してあげる

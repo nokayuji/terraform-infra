@@ -7,7 +7,11 @@ resource "aws_instance" "self_host_ec2" {
   key_name                    = aws_key_pair.self_host_ec2.key_name
   associate_public_ip_address = true
   iam_instance_profile        = data.aws_iam_instance_profile.runner_ec2_profile.name
-  user_data                   = file("${path.module}/userdata.sh")
+  user_data = templatefile("${path.module}/userdata.sh", {
+    ssm_path = "/github/token"
+    region   = "ap-northeast-1"
+    repo_url = "https://github.com/Terraform-TEST0928/terraform-infra"
+  })
 
   vpc_security_group_ids = [
     aws_security_group.runner_ec2_sg.id
@@ -16,6 +20,7 @@ resource "aws_instance" "self_host_ec2" {
   root_block_device {
     volume_type = "gp3"
     volume_size = var.runner_ec2_volume_size
+    encrypted   = true
   }
 
   metadata_options {
@@ -34,12 +39,13 @@ resource "tls_private_key" "self_host_ec2" {
 }
 
 resource "aws_key_pair" "self_host_ec2" {
-  key_name   = "${var.sys}-${var.env}-ec2"
+  key_name   = "${var.sys}-${var.env}-runner-ec2"
   public_key = tls_private_key.self_host_ec2.public_key_openssh
 }
 
-resource "local_file" "self_host_ec2_key" {
-  content         = tls_private_key.self_host_ec2.private_key_pem
-  filename        = "${path.module}/../../env/dev/${var.sys}-${var.env}-runner-ec2.pem"
-  file_permission = "0400" #所有者のみ読み取り可能
-}
+### すでにpemファイルは存在するためコメントアウト
+# resource "local_file" "self_host_ec2_key" {
+#   content         = tls_private_key.self_host_ec2.private_key_pem
+#   filename        = "${path.module}/../../env/dev/${var.sys}-${var.env}-runner-ec2.pem"
+#   file_permission = "0400" #所有者のみ読み取り可能
+# }
