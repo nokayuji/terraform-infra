@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S3ギャラリー</title>
+    <title>S3ImageGallery</title>
     <style>
         body {
             font-family: "Helvetica Neue", Arial, sans-serif;
@@ -41,7 +42,7 @@
         .card {
             background: white;
             border-radius: 15px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             max-width: 300px;
             transition: transform 0.3s;
@@ -83,34 +84,59 @@
         }
     </style>
 </head>
+
 <body>
     <header>
-        <h1>My S3 Image Gallery(SUSHI)</h1>
-        <p>ここにアップロードした画像と説明が表示されます</p>
+        <h1>Self-Introduction</h1>
+        <p>私の好きなものたちを紹介します</p>
     </header>
 
     <main>
         <div class="card">
-            <img src="https://nyj-dev01-image-bucket.s3.amazonaws.com/image01.jpeg" alt="サンプル画像">
+            <img src="https://nyj-dev01-image-bucket.s3.amazonaws.com/image01.jpg" alt="サンプル画像">
             <div class="content">
-                <h2>炙りトロサーモン</h2>
-                <p>これは僕がお寿司で一番好きな炙りトロサーモンです。</p>
+                <h2>永岡勇志</h2>
+                <p>福岡で産まれ大阪で小学校を過ごし、香川で中高を過ごし、東京で大学を過ごして、福岡で就職しました。</p>
             </div>
         </div>
 
         <div class="card">
-            <img src="https://nyj-dev01-image-bucket.s3.amazonaws.com/image02.jpeg" alt="サンプル画像2">
+            <img src="https://nyj-dev01-image-bucket.s3.amazonaws.com/image02.jpg" alt="サンプル画像2">
             <div class="content">
-                <h2>中トロ</h2>
-                <p>これは僕がお寿司で二番目に好きな中トロです。</p>
+                <h2>愛猫：ころん</h2>
+                <p>9月で3歳になります。猫は本当に見ていて飽きません！全人類飼いましょう。</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://nyj-dev01-image-bucket.s3.amazonaws.com/image03.jpg" alt="サンプル画像2">
+            <div class="content">
+                <h2>大好物のラーメン</h2>
+                <p>学生時代から今までラーメンだけはずっと食べてきました。香川にいた時も基本うどんよりラーメン食べてました。</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://nyj-dev01-image-bucket.s3.amazonaws.com/image04.jpg" alt="サンプル画像">
+            <div class="content">
+                <h2>7月に購入したマイカー</h2>
+                <p>ずっとレンタカードライバーでしたがようやく購入できました。購入してからほぼ毎日のように運転し、全く後悔しませんでした。</p>
             </div>
         </div>
 
         <!-- 追加の画像カードはここに同じ形式でコピー -->
     </main>
 
+    <section
+        style="padding: 20px; max-width: 800px; margin: 0 auto; font-size: 1.1em; color: #333; text-align: center; font-weight: 600;">
+        <p>
+            本日はここまで私の発表をご清聴いただき、ありがとうございました。
+        </p>
+    </section>
+
     <footer>
-        &copy; 2025 Your Company Name. All Rights Reserved.
+        &copy; 2025 Yuji Nagaoka. All Rights Reserved.
     </footer>
 </body>
+
 </html>

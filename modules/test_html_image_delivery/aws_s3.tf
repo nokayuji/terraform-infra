@@ -2,16 +2,16 @@ resource "aws_s3_bucket" "image_delivery" {
   bucket = "${var.sys}-${var.env}-image-bucket"
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "image_delivery" {
-  bucket = aws_s3_bucket.image_delivery.id
+# resource "aws_s3_bucket_server_side_encryption_configuration" "image_delivery" {
+#   bucket = aws_s3_bucket.image_delivery.id
 
-  rule {
-    apply_server_side_encryption_by_default {
-      kms_master_key_id = aws_kms_key.s3_key.id
-      sse_algorithm     = "aws:kms"
-    }
-  }
-}
+#   rule {
+#     apply_server_side_encryption_by_default {
+#       kms_master_key_id = aws_kms_key.s3_key.id
+#       sse_algorithm     = "aws:kms"
+#     }
+#   }
+# }
 
 resource "aws_s3_bucket_ownership_controls" "image_delivery" {
   bucket = aws_s3_bucket.image_delivery.id
@@ -49,19 +49,37 @@ resource "aws_s3_object" "index_delivery" {
 
 resource "aws_s3_object" "image01_delivery" {
   bucket = aws_s3_bucket.image_delivery.id
-  key    = "image01.jpeg"
-  source = "${path.module}/image01.jpeg"
+  key    = "image01.jpg"
+  source = "${path.module}/image01.jpg"
   #acl          = "public-read"
-  content_type = "image01/jpeg"
+  content_type = "image01/jpg"
   depends_on   = [aws_s3_bucket_ownership_controls.image_delivery]
 }
 
 resource "aws_s3_object" "image02_delivery" {
   bucket = aws_s3_bucket.image_delivery.id
-  key    = "image02.jpeg"
-  source = "${path.module}/image02.jpeg"
+  key    = "image02.jpg"
+  source = "${path.module}/image02.jpg"
   #acl          = "public-read"
-  content_type = "image02/jpeg"
+  content_type = "image02/jpg"
+  depends_on   = [aws_s3_bucket_ownership_controls.image_delivery]
+}
+
+resource "aws_s3_object" "image03_delivery" {
+  bucket = aws_s3_bucket.image_delivery.id
+  key    = "image03.jpg"
+  source = "${path.module}/image03.jpg"
+  #acl          = "public-read"
+  content_type = "image03/jpg"
+  depends_on   = [aws_s3_bucket_ownership_controls.image_delivery]
+}
+
+resource "aws_s3_object" "image04_delivery" {
+  bucket = aws_s3_bucket.image_delivery.id
+  key    = "image04.jpg"
+  source = "${path.module}/image04.jpg"
+  #acl          = "public-read"
+  content_type = "image04/jpg"
   depends_on   = [aws_s3_bucket_ownership_controls.image_delivery]
 }
 
