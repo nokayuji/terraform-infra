@@ -61,7 +61,6 @@ variable "vpc_id" {
 #   description = "Whether to create an EC2 instance"
 # }
 
-/*
 variable "runner_ec2_instance_type" {
   type        = string
   description = "Instance type for runner EC2"
@@ -81,4 +80,3 @@ variable "my_cidr" {
   type        = string
   description = "my IP"
 }
-*/
