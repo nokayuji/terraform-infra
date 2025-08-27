@@ -52,7 +52,7 @@ jobs:
 
     - name: Terraform Init # tfコードの初期化(validate,planするのに必須)
       working-directory: env/${{ github.event.inputs.environment }} # 環境ごとにinitが必要で、その環境のモジュールを作成するディレクトリで実行する #トリガー条件で選択した環境がこちらに入る
-      run: terraform init -upgrade
+      run: terraform init
 
     - name: Select Terraform Workspace # 適用環境の選択
       working-directory: env/${{ github.event.inputs.environment }} # AWSへのapply環境のディレクトリを指定
