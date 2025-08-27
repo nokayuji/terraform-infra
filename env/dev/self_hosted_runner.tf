@@ -1,3 +1,4 @@
+/*
 module "self_hosted_runner" {
   source = "../../modules/self_hosted_runner"
 
@@ -10,3 +11,4 @@ module "self_hosted_runner" {
   runner_ec2_create_flag   = var.runner_ec2_create_flag
   my_cidr                  = var.my_cidr
 }
+*/
