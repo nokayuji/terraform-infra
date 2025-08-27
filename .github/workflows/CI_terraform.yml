@@ -66,7 +66,7 @@ jobs:
     - name: Setup Terraform # Terraformコマンドを実行するために必要
       uses: hashicorp/setup-terraform@v3
       with:
-        terraform_version: 1.5.7
+        terraform_version: 1.9.0
 
     # - name: Setup TFLint #静的解析ツールであるTFlintのセットアップを行う
     #   uses: terraform-linters/setup-tflint@v4
@@ -173,7 +173,7 @@ jobs:
 
     - name: Terraform Init # tfコードの初期化(validate,planするのに必須)
       working-directory: env/${{ matrix.environment }} # 環境ごとにinitが必要で、その環境のモジュールを作成するディレクトリで実行する
-      run: terraform init -upgrade
+      run: terraform init
 
     - name: Terraform Validation # Terraformコマンドに備え付けられている構文チェッカー
       id: validate
